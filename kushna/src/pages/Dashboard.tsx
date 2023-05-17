@@ -14,6 +14,7 @@ import {
 	PieChart,
 	Pie,
 } from "recharts";
+import useBreakpoint from "../hooks/UseBreakpoint";
 const data = [
 	{ name: "Monday", uv: 400, pv: 2400, amt: 2400 },
 	{ name: "Tuesday", uv: 200, pv: 2000, amt: 2000 },
@@ -49,16 +50,22 @@ const data01 = [
 		value: 189,
 	},
 ];
+
 const Dashboard = () => {
+	const breakpoint = useBreakpoint();
 	return (
-		<div style={{ paddingLeft: 20, paddingRight: 20 }}>
+		<div style={{}}>
 			<h1>Dashboard</h1>
-			<Row gutter={32} style={{}}>
+			<Row gutter={{ xs: 4, sm: 6, md: 32 }} wrap style={{}}>
 				<Col span={6}>
 					<BasicCard
 						stat={1020}
 						label={"Orders"}
-						icon={<BarChartOutlined style={{ fontSize: "48px" }} />}
+						icon={
+							<BarChartOutlined
+								style={{ fontSize: breakpoint > 768 ? "48px" : "12px" }}
+							/>
+						}
 					/>
 				</Col>
 				<Col span={6}>

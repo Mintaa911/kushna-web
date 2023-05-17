@@ -33,18 +33,13 @@ function getItem(
 
 const items: MenuProps["items"] = [
 	getItem(<Link to={"/"}>Dashboard</Link>, "dashboard", <DashboardOutlined />),
-	getItem(<Link to={"order"}>Order</Link>, "order", <DesktopOutlined />),
+	getItem(<Link to={"/order"}>Order</Link>, "order", <DesktopOutlined />),
 	getItem(
 		<Link to={"/restaurant"}>Restaurant</Link>,
 		"restaurant",
 		<PieChartOutlined />
 	),
-	getItem(<Link to={"/customer"}>Customer</Link>, "customer", <UserOutlined />),
-	getItem(
-		<Link to={"/delivery-person"}>Delivery Person</Link>,
-		"delivery person",
-		<TeamOutlined />
-	),
+	getItem(<Link to={"/user"}>User</Link>, "user", <UserOutlined />),
 ];
 
 type LayoutProps = {
@@ -57,7 +52,6 @@ const MainLayout = ({ children, label }: LayoutProps) => {
 		token: { colorBgContainer },
 	} = theme.useToken();
 	const breakpoint = useBreakpoint();
-	console.log(breakpoint);
 
 	return (
 		<div>
@@ -88,18 +82,25 @@ const MainLayout = ({ children, label }: LayoutProps) => {
 				style={{
 					marginLeft: breakpoint > 1000 ? 200 : 50,
 					minHeight: "100vh",
+					marginTop: 0,
 				}}
 			>
 				<Header
 					style={{
 						padding: 0,
-						paddingLeft: 20,
 						alignContent: "center",
 						background: colorBgContainer,
 						height: 40,
 					}}
 				></Header>
-				<Content style={{ margin: "2px 0px 0px 0px", overflow: "initial" }}>
+				<Content
+					style={{
+						paddingLeft: 20,
+						paddingRight: 20,
+						marginTop: 10,
+						overflow: "initial",
+					}}
+				>
 					{children}
 				</Content>
 				<Footer style={{ textAlign: "center" }}>
