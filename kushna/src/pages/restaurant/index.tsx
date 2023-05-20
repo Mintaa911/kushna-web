@@ -1,11 +1,22 @@
-import React, { useState } from "react";
-import { Button, Card, Modal, Form, Input, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Modal, Form, Input, Select, TimePicker } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import RestaurantTable from "../../components/restuarant/RestaurantTable";
+import { useMutation } from "@apollo/client";
+import { CREATE_RESTAURANT } from "../../graphql/mutation";
+import dayjs from "dayjs";
+
+const format = "HH:mm";
 
 const Restaurant = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [loading, setLoading] = useState(false);
+	const [createRestaurant, { loading, data }] = useMutation(CREATE_RESTAURANT);
+
+	useEffect(() => {
+		if (data) {
+			console.log("successfully created Restaurant!");
+		}
+	}, [data]);
 
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -15,10 +26,16 @@ const Restaurant = () => {
 		setIsModalOpen(false);
 	};
 	const onFinish = (values: any) => {
-		setLoading(true);
-		console.log("Success:", values);
-		setTimeout(() => {}, 1000);
-		setLoading(false);
+		createRestaurant({
+			variables: {
+				input: {
+					...values,
+					openingHour: values.openingHour.toISOString(),
+					closingHour: values.closingHour.toISOString(),
+					banner: [values.banner],
+				},
+			},
+		});
 	};
 
 	const onFinishFailed = (errorInfo: any) => {
@@ -128,6 +145,7 @@ const Restaurant = () => {
 							<Input placeholder='+251911223344' />
 						</Form.Item>
 					</div>
+
 					<div style={{ display: "flex", justifyContent: "space-between" }}>
 						<Form.Item
 							label='Opening Hour'
@@ -140,7 +158,10 @@ const Restaurant = () => {
 							]}
 							style={{ marginBottom: 10 }}
 						>
-							<Input placeholder='08:00AM' />
+							<TimePicker
+								defaultValue={dayjs("00:00", format)}
+								format={format}
+							/>
 						</Form.Item>
 						<Form.Item
 							label='Closing Hour'
@@ -148,33 +169,52 @@ const Restaurant = () => {
 							rules={[
 								{
 									required: true,
-
 									message: "Please input restaurant closing hour!",
 								},
 							]}
 							style={{ marginBottom: 10 }}
 						>
-							<Input placeholder='09:00PM' />
+							<TimePicker
+								defaultValue={dayjs("00:00", format)}
+								format={format}
+							/>
 						</Form.Item>
 					</div>
 
-					<Form.Item
-						label='Restaurant Type'
-						name='restaurantType'
-						rules={[
-							{ required: true, message: "Please input restaurant type!" },
-						]}
-						style={{ marginBottom: 20 }}
-					>
-						<Select
-							defaultValue='HOTEL'
-							onChange={() => {}}
-							options={[
-								{ value: "HOTEL", label: "Hotel" },
-								{ value: "HOME", label: "Home" },
+					<div style={{ display: "flex", justifyContent: "space-between" }}>
+						<Form.Item
+							label='Restaurant Type'
+							name='restaurantType'
+							rules={[
+								{ required: true, message: "Please input restaurant type!" },
 							]}
-						/>
-					</Form.Item>
+							style={{ marginBottom: 20 }}
+						>
+							<Select
+								defaultValue='HOTEL'
+								onChange={() => {}}
+								options={[
+									{ value: "HOTEL", label: "Hotel" },
+									{ value: "HOME", label: "Home" },
+								]}
+							/>
+						</Form.Item>
+						<Form.Item
+							label='Banner'
+							name='banner'
+							rules={[
+								{
+									required: true,
+									whitespace: true,
+									message: "Please input restaurant banner!",
+									type: "url",
+								},
+							]}
+							style={{ marginBottom: 20 }}
+						>
+							<Input placeholder='image url' />
+						</Form.Item>
+					</div>
 
 					<Form.Item style={{ display: "flex", justifyContent: "center" }}>
 						<Button loading={loading} type='primary' htmlType='submit'>

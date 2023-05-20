@@ -3,12 +3,11 @@ import {
 	DashboardOutlined,
 	DesktopOutlined,
 	PieChartOutlined,
-	TeamOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu, theme } from "antd";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useBreakpoint from "../hooks/UseBreakpoint";
 
 const { Header, Content, Footer, Sider } = Layout;

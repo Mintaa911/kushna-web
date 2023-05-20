@@ -1,12 +1,14 @@
 import { Button, Card, Form, Input, Modal, Select } from "antd";
 import UserTable from "../../components/user/UserTable";
 import { PlusOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useMutation } from "@apollo/client";
+import { Create_User } from "../../graphql/mutation";
 
 const User = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [loading, setLoading] = useState(false);
 
+	const [createUser, { loading, data }] = useMutation(Create_User);
 	const showModal = () => {
 		setIsModalOpen(true);
 	};
@@ -15,11 +17,13 @@ const User = () => {
 		setIsModalOpen(false);
 	};
 	const onFinish = (values: any) => {
-		setLoading(true);
-		console.log("Success:", values);
-		setTimeout(() => {}, 1000);
-		setLoading(false);
+		createUser({ variables: { input: values } });
 	};
+	useEffect(() => {
+		if (data) {
+			console.log("successfully created User!");
+		}
+	}, [data]);
 
 	const onFinishFailed = (errorInfo: any) => {
 		console.log("Failed:", errorInfo);
@@ -110,7 +114,7 @@ const User = () => {
 					</Form.Item>
 					<Form.Item
 						label='User Type'
-						name='userType'
+						name='role'
 						rules={[{ required: true, message: "Please input user type!" }]}
 						style={{ marginBottom: 20 }}
 					>

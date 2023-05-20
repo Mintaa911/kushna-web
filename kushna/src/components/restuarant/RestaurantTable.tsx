@@ -52,7 +52,6 @@ export default function RestaurantTable() {
 		},
 	});
 	const { loading, data } = useQuery(GET_RESTAURANTS);
-	console.log(data);
 
 	useEffect(() => {
 		if (data) {
