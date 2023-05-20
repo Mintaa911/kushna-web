@@ -68,7 +68,7 @@ const OrderTable = () => {
 	console.log(dataQuery);
 	useEffect(() => {
 		if (dataQuery) {
-			setData(dataQuery.orders);
+			setData(dataQuery.getAllOrders);
 		}
 	}, [dataQuery]);
 
