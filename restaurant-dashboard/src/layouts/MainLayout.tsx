@@ -1,5 +1,9 @@
 import React, { ReactNode } from "react";
-import { DashboardOutlined } from "@ant-design/icons";
+import {
+	DashboardOutlined,
+	DesktopOutlined,
+	PieChartOutlined,
+} from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu, theme } from "antd";
 import { Link } from "react-router-dom";
@@ -26,7 +30,17 @@ function getItem(
 }
 
 const items: MenuProps["items"] = [
-	getItem(<Link to={"/"}>Dashboard</Link>, "dashboard", <DashboardOutlined />),
+	getItem(<Link to={"/"}>Menus</Link>, "menus", <DashboardOutlined />),
+	getItem(
+		<Link to={"/new-order"}>New Order</Link>,
+		"newOrder",
+		<DesktopOutlined />
+	),
+	getItem(
+		<Link to={"/order-history"}>Order History</Link>,
+		"orderHistory",
+		<PieChartOutlined />
+	),
 ];
 
 type LayoutProps = {

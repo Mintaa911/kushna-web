@@ -1,9 +1,8 @@
 import { Table, Modal } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
-import { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
-import { GET_ORDERS } from "../../graphql/query";
+import { useState } from "react";
+// import { useQuery } from "@apollo/client";
 
 interface DataType {
 	id: string;
@@ -24,36 +23,12 @@ interface TableParams {
 
 const columns: ColumnsType<DataType> = [
 	{
-		title: "Customer",
-		dataIndex: "customer",
-		sorter: true,
-		render: (customer) =>
-			`${customer.user.firstName} ${customer.user.lastName}`,
-		// width: "30%",
-	},
-	{
-		title: "Quantity",
-		dataIndex: "quantity",
-	},
-	{
-		title: "Price",
-		dataIndex: "totalPrice",
-	},
-	{
-		title: "Delivery Type",
-		dataIndex: "deliveryType",
-	},
-	{
-		title: "Payment Status",
-		dataIndex: "paymentStatus",
-	},
-	{
 		title: "Status",
 		dataIndex: "orderStatus",
 	},
 ];
 
-const OrderTable = () => {
+const NewOrderTable = () => {
 	const [data, setData] = useState<DataType[]>();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [tableParams, setTableParams] = useState<TableParams>({
@@ -63,14 +38,6 @@ const OrderTable = () => {
 			showSizeChanger: false,
 		},
 	});
-
-	const { loading, data: dataQuery } = useQuery(GET_ORDERS);
-	console.log(dataQuery);
-	useEffect(() => {
-		if (dataQuery) {
-			setData(dataQuery.getAllOrders);
-		}
-	}, [dataQuery]);
 
 	const handleTableChange = (
 		pagination: TablePaginationConfig,
@@ -110,7 +77,7 @@ const OrderTable = () => {
 				rowKey={(record) => record.id}
 				dataSource={data}
 				pagination={tableParams.pagination}
-				loading={loading}
+				// loading={loading}
 				onChange={handleTableChange}
 			/>
 			<Modal
@@ -125,4 +92,4 @@ const OrderTable = () => {
 	);
 };
 
-export default OrderTable;
+export default NewOrderTable;

@@ -3,7 +3,7 @@ import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_ORDERS } from "../../graphql/query";
+import { GET_ORDER_HISTORY } from "../../graphql/query";
 
 interface DataType {
 	id: string;
@@ -53,7 +53,7 @@ const columns: ColumnsType<DataType> = [
 	},
 ];
 
-const OrderTable = () => {
+const OrderHistoryTable = () => {
 	const [data, setData] = useState<DataType[]>();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [tableParams, setTableParams] = useState<TableParams>({
@@ -64,8 +64,8 @@ const OrderTable = () => {
 		},
 	});
 
-	const { loading, data: dataQuery } = useQuery(GET_ORDERS);
-	console.log(dataQuery);
+	const { loading, data: dataQuery } = useQuery(GET_ORDER_HISTORY);
+
 	useEffect(() => {
 		if (dataQuery) {
 			setData(dataQuery.getAllOrders);
@@ -125,4 +125,4 @@ const OrderTable = () => {
 	);
 };
 
-export default OrderTable;
+export default OrderHistoryTable;
