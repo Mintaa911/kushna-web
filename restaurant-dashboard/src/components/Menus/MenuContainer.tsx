@@ -93,7 +93,7 @@ const MenuContainer = () => (
       </Col>
       <Col style={{ marginLeft: "auto" }}>
         <p>
-          <Button>Default Button</Button>
+          <Button>Add Menu</Button>
         </p>
       </Col>
       <Col span={24}>
