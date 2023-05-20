@@ -28,3 +28,15 @@ export const CREATE_RESTAURANT = gql`
 		}
 	}
 `;
+
+export const Create_User = gql`
+	mutation CreateUser($input: UserRegisterInput!) {
+		createUser(input: $input) {
+			id
+			firstName
+			lastName
+			email
+			role
+		}
+	}
+`;

@@ -43,7 +43,6 @@ const CustomerTable = () => {
 	});
 
 	const { loading, data: dataQuery } = useQuery(GET_USERS);
-	console.log(dataQuery);
 	useEffect(() => {
 		if (dataQuery) {
 			setData(dataQuery.users);

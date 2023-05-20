@@ -1,11 +1,7 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import "./App.css";
 import MainLayout from "./layouts/MainLayout";
-import {
-	createBrowserRouter,
-	Navigate,
-	RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import User from "./pages/user";
 import Dashboard from "./pages/Dashboard";
