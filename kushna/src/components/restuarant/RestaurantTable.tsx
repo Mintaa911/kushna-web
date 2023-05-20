@@ -3,7 +3,9 @@ import { Table, Modal } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import { RestaurantDataType } from "../../types";
-import qs from "qs";
+import { useQuery } from "@apollo/client";
+import { GET_RESTAURANTS } from "../../graphql/query";
+
 interface TableParams {
 	pagination?: TablePaginationConfig;
 	sortField?: string;
@@ -24,12 +26,12 @@ const columns: ColumnsType<RestaurantDataType> = [
 		// width: "20%",
 	},
 	{
-		title: "Email",
-		dataIndex: "email",
-	},
-	{
 		title: "Phone",
 		dataIndex: "phone",
+	},
+	{
+		title: "Restaurant Type",
+		dataIndex: "restaurantType",
 	},
 	{
 		title: "Status",
@@ -37,17 +39,10 @@ const columns: ColumnsType<RestaurantDataType> = [
 	},
 ];
 
-const getRandomuserParams = (params: TableParams) => ({
-	results: params.pagination?.pageSize,
-	page: params.pagination?.current,
-	...params,
-});
-
 export default function RestaurantTable() {
 	const [myData, setData] = useState<RestaurantDataType[]>();
 	const [singleRestaurant, setSingleRestaurant] =
 		useState<RestaurantDataType>();
-	const [loading, setLoading] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [tableParams, setTableParams] = useState<TableParams>({
 		pagination: {
@@ -56,33 +51,39 @@ export default function RestaurantTable() {
 			showSizeChanger: false,
 		},
 	});
-
-	const fetchData = () => {
-		setLoading(true);
-		fetch(
-			`https://randomuser.me/api?${qs.stringify(
-				getRandomuserParams(tableParams)
-			)}`
-		)
-			.then((res) => res.json())
-			.then(({ results }) => {
-				setData(results);
-				setLoading(false);
-				setTableParams({
-					...tableParams,
-					pagination: {
-						...tableParams.pagination,
-						total: 200,
-						// 200 is mock data, you should read it from server
-						// total: data.totalCount,
-					},
-				});
-			});
-	};
+	const { loading, data } = useQuery(GET_RESTAURANTS);
+	console.log(data);
 
 	useEffect(() => {
-		fetchData();
-	}, [JSON.stringify(tableParams)]);
+		if (data) {
+			setData(data.restaurants);
+		}
+	}, [data]);
+
+	// 	fetch(
+	// 		`https://randomuser.me/api?${qs.stringify(
+	// 			getRandomuserParams(tableParams)
+	// 		)}`
+	// 	)
+	// 		.then((res) => res.json())
+	// 		.then(({ results }) => {
+	// 			setData(results);
+	// 			setLoading(false);
+	// 			setTableParams({
+	// 				...tableParams,
+	// 				pagination: {
+	// 					...tableParams.pagination,
+	// 					total: 200,
+	// 					// 200 is mock data, you should read it from server
+	// 					// total: data.totalCount,
+	// 				},
+	// 			});
+	// 		});
+	// };
+
+	// useEffect(() => {
+	// 	fetchData();
+	// }, [JSON.stringify(tableParams)]);
 
 	const handleTableChange = (
 		pagination: TablePaginationConfig,
@@ -126,7 +127,7 @@ export default function RestaurantTable() {
 				rowKey={(record) => record.id}
 				dataSource={myData}
 				pagination={tableParams.pagination}
-				// loading={loading}
+				loading={loading}
 				onChange={handleTableChange}
 			/>
 			<Modal

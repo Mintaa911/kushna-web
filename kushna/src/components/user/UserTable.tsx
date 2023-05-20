@@ -2,19 +2,9 @@ import { Table, Modal } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
-import qs from "qs";
-
-interface DataType {
-	name: {
-		first: string;
-		last: string;
-	};
-	gender: string;
-	email: string;
-	login: {
-		uuid: string;
-	};
-}
+import { UserDataType } from "../../types";
+import { useQuery } from "@apollo/client";
+import { GET_USERS } from "../../graphql/query";
 
 interface TableParams {
 	pagination?: TablePaginationConfig;
@@ -23,38 +13,26 @@ interface TableParams {
 	filters?: Record<string, FilterValue | null>;
 }
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<UserDataType> = [
 	{
 		title: "Name",
-		dataIndex: "name",
+		dataIndex: "firstName",
 		sorter: true,
-		render: (name) => `${name.first} ${name.last}`,
+		// render: (name) => `${name.firstName} ${name.lastName}`,
 		// width: "30%",
-	},
-	{
-		title: "Gender",
-		dataIndex: "gender",
-		filters: [
-			{ text: "Male", value: "male" },
-			{ text: "Female", value: "female" },
-		],
-		onFilter: (value, record) => record.gender.includes(value as string),
-		// width: "20%",
 	},
 	{
 		title: "Email",
 		dataIndex: "email",
 	},
+	{
+		title: "Role",
+		dataIndex: "role",
+	},
 ];
 
-const getRandomuserParams = (params: TableParams) => ({
-	results: params.pagination?.pageSize,
-	page: params.pagination?.current,
-	...params,
-});
 const CustomerTable = () => {
-	const [data, setData] = useState<DataType[]>();
-	const [loading, setLoading] = useState(false);
+	const [data, setData] = useState<UserDataType[]>();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [tableParams, setTableParams] = useState<TableParams>({
 		pagination: {
@@ -64,37 +42,18 @@ const CustomerTable = () => {
 		},
 	});
 
-	const fetchData = () => {
-		setLoading(true);
-		fetch(
-			`https://randomuser.me/api?${qs.stringify(
-				getRandomuserParams(tableParams)
-			)}`
-		)
-			.then((res) => res.json())
-			.then(({ results }) => {
-				setData(results);
-				setLoading(false);
-				setTableParams({
-					...tableParams,
-					pagination: {
-						...tableParams.pagination,
-						total: 200,
-						// 200 is mock data, you should read it from server
-						// total: data.totalCount,
-					},
-				});
-			});
-	};
-
+	const { loading, data: dataQuery } = useQuery(GET_USERS);
+	console.log(dataQuery);
 	useEffect(() => {
-		fetchData();
-	}, [JSON.stringify(tableParams)]);
+		if (dataQuery) {
+			setData(dataQuery.users);
+		}
+	}, [dataQuery]);
 
 	const handleTableChange = (
 		pagination: TablePaginationConfig,
 		filters: Record<string, FilterValue | null>,
-		sorter: SorterResult<DataType> | SorterResult<DataType>[]
+		sorter: SorterResult<UserDataType> | SorterResult<UserDataType>[]
 	) => {
 		setTableParams({
 			pagination,
@@ -108,7 +67,7 @@ const CustomerTable = () => {
 		}
 	};
 
-	const showModal = () => {
+	const showModal = (record: UserDataType) => {
 		setIsModalOpen(true);
 	};
 
@@ -121,12 +80,12 @@ const CustomerTable = () => {
 				onRow={(record, rowIndex) => {
 					return {
 						onClick: (event) => {
-							showModal();
+							showModal(record);
 						}, // click row
 					};
 				}}
 				columns={columns}
-				rowKey={(record) => record.login.uuid}
+				rowKey={(record) => record.id}
 				dataSource={data}
 				pagination={tableParams.pagination}
 				loading={loading}

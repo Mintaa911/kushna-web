@@ -11,3 +11,14 @@ export interface RestaurantDataType {
 	banner: [];
 	status: string;
 }
+
+export interface UserDataType {
+	id: string;
+	name: {
+		first: string;
+		last: string;
+	};
+	gender: string;
+	email: string;
+	role: string;
+}

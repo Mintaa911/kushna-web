@@ -2,18 +2,17 @@ import { Table, Modal } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
-import qs from "qs";
+import { useQuery } from "@apollo/client";
+import { GET_ORDERS } from "../../graphql/query";
 
 interface DataType {
-	name: {
+	id: string;
+	customer: {
 		first: string;
 		last: string;
 	};
 	gender: string;
 	email: string;
-	login: {
-		uuid: string;
-	};
 }
 
 interface TableParams {
@@ -25,35 +24,37 @@ interface TableParams {
 
 const columns: ColumnsType<DataType> = [
 	{
-		title: "Name",
-		dataIndex: "name",
+		title: "Customer",
+		dataIndex: "customer",
 		sorter: true,
-		render: (name) => `${name.first} ${name.last}`,
+		render: (customer) =>
+			`${customer.user.firstName} ${customer.user.lastName}`,
 		// width: "30%",
 	},
 	{
-		title: "Gender",
-		dataIndex: "gender",
-		filters: [
-			{ text: "Male", value: "male" },
-			{ text: "Female", value: "female" },
-		],
-		// width: "20%",
+		title: "Quantity",
+		dataIndex: "quantity",
 	},
 	{
-		title: "Email",
-		dataIndex: "email",
+		title: "Price",
+		dataIndex: "totalPrice",
+	},
+	{
+		title: "Delivery Type",
+		dataIndex: "deliveryType",
+	},
+	{
+		title: "Payment Status",
+		dataIndex: "paymentStatus",
+	},
+	{
+		title: "Status",
+		dataIndex: "orderStatus",
 	},
 ];
 
-const getRandomuserParams = (params: TableParams) => ({
-	results: params.pagination?.pageSize,
-	page: params.pagination?.current,
-	...params,
-});
 const OrderTable = () => {
 	const [data, setData] = useState<DataType[]>();
-	const [loading, setLoading] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [tableParams, setTableParams] = useState<TableParams>({
 		pagination: {
@@ -63,32 +64,13 @@ const OrderTable = () => {
 		},
 	});
 
-	const fetchData = () => {
-		setLoading(true);
-		fetch(
-			`https://randomuser.me/api?${qs.stringify(
-				getRandomuserParams(tableParams)
-			)}`
-		)
-			.then((res) => res.json())
-			.then(({ results }) => {
-				setData(results);
-				setLoading(false);
-				setTableParams({
-					...tableParams,
-					pagination: {
-						...tableParams.pagination,
-						total: 200,
-						// 200 is mock data, you should read it from server
-						// total: data.totalCount,
-					},
-				});
-			});
-	};
-
+	const { loading, data: dataQuery } = useQuery(GET_ORDERS);
+	console.log(dataQuery);
 	useEffect(() => {
-		fetchData();
-	}, [JSON.stringify(tableParams)]);
+		if (dataQuery) {
+			setData(dataQuery.orders);
+		}
+	}, [dataQuery]);
 
 	const handleTableChange = (
 		pagination: TablePaginationConfig,
@@ -111,10 +93,6 @@ const OrderTable = () => {
 		setIsModalOpen(true);
 	};
 
-	const handleOk = () => {
-		setIsModalOpen(false);
-	};
-
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
@@ -129,12 +107,20 @@ const OrderTable = () => {
 					};
 				}}
 				columns={columns}
-				rowKey={(record) => record.login.uuid}
+				rowKey={(record) => record.id}
 				dataSource={data}
 				pagination={tableParams.pagination}
 				loading={loading}
 				onChange={handleTableChange}
 			/>
+			<Modal
+				title='Order Detail'
+				open={isModalOpen}
+				onCancel={handleCancel}
+				footer={null}
+			>
+				<p>detail</p>
+			</Modal>
 		</>
 	);
 };
