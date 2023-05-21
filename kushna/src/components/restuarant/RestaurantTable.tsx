@@ -52,37 +52,11 @@ export default function RestaurantTable() {
 		},
 	});
 	const { loading, data } = useQuery(GET_RESTAURANTS);
-
 	useEffect(() => {
 		if (data) {
 			setData(data.restaurants);
 		}
 	}, [data]);
-
-	// 	fetch(
-	// 		`https://randomuser.me/api?${qs.stringify(
-	// 			getRandomuserParams(tableParams)
-	// 		)}`
-	// 	)
-	// 		.then((res) => res.json())
-	// 		.then(({ results }) => {
-	// 			setData(results);
-	// 			setLoading(false);
-	// 			setTableParams({
-	// 				...tableParams,
-	// 				pagination: {
-	// 					...tableParams.pagination,
-	// 					total: 200,
-	// 					// 200 is mock data, you should read it from server
-	// 					// total: data.totalCount,
-	// 				},
-	// 			});
-	// 		});
-	// };
-
-	// useEffect(() => {
-	// 	fetchData();
-	// }, [JSON.stringify(tableParams)]);
 
 	const handleTableChange = (
 		pagination: TablePaginationConfig,
