@@ -65,7 +65,6 @@ const OrderTable = () => {
 	});
 
 	const { loading, data: dataQuery } = useQuery(GET_ORDERS);
-	console.log(dataQuery);
 	useEffect(() => {
 		if (dataQuery) {
 			setData(dataQuery.getAllOrders);

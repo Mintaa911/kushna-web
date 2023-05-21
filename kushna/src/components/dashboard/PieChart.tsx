@@ -1,11 +1,6 @@
-import {
-
-  Pie,
-  PieChart,
-} from "recharts";
+import { Pie, PieChart } from "recharts";
 
 export default function OrderPieChart({ data }: { data: any }) {
-	console.log(data);
 	return (
 		<PieChart width={520} height={200}>
 			<Pie

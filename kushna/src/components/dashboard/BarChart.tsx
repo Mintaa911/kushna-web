@@ -9,13 +9,12 @@ import {
 } from "recharts";
 
 export default function OrderBarChart({ data }: { data: any }) {
-	console.log(data);
 	return (
 		<BarChart
-			width={500}
+			width={520}
 			height={200}
 			data={data}
-			margin={{ top: 20, right: 20, left: 5, bottom: 5 }}
+			margin={{ top: 20, right: 5, left: 0, bottom: 5 }}
 		>
 			<CartesianGrid strokeDasharray='3 3' />
 			<XAxis dataKey='name' />
@@ -23,6 +22,7 @@ export default function OrderBarChart({ data }: { data: any }) {
 			<Tooltip />
 			<Legend />
 			<Bar dataKey='pv' fill='#8884d8' />
+			<Bar dataKey='uv' fill='#2224d8' />
 		</BarChart>
 	);
 }

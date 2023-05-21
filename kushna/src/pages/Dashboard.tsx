@@ -1,57 +1,106 @@
-import { Row, Col, Card } from 'antd';
-import { BarChartOutlined } from '@ant-design/icons';
-import BasicCard from '../components/common/BasicCard';
-import useBreakpoint from '../hooks/UseBreakpoint';
-import { ChartData1, ChartData2 } from '../data/SampleData';
-import OrderBarChart from '../components/dashboard/BarChart';
-import OrderPieChart from '../components/dashboard/PieChart';
-import LineChart from '../components/dashboard/LineChart';
+import { Row, Col, Card } from "antd";
+import { BarChartOutlined } from "@ant-design/icons";
+import BasicCard from "../components/common/BasicCard";
+import useBreakpoint from "../hooks/UseBreakpoint";
+import { ChartData1, ChartData2 } from "../data/SampleData";
+import OrderBarChart from "../components/dashboard/BarChart";
+import OrderPieChart from "../components/dashboard/PieChart";
+import LineChart from "../components/dashboard/LineChart";
+import { useQuery } from "@apollo/client";
+import { GET_ORDERS, GET_RESTAURANTS, GET_USERS } from "../graphql/query";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
-  const breakpoint = useBreakpoint();
-  return (
-    <div style={{}}>
-      <h1>Dashboard</h1>
-      <Row gutter={{ xs: 4, sm: 6, md: 32 }} wrap style={{}}>
-        <Col span={6}>
-          <BasicCard stat={1020} label={'Orders'} icon={<BarChartOutlined style={{ fontSize: breakpoint > 768 ? '48px' : '12px' }} />} />
-        </Col>
-        <Col span={6}>
-          <BasicCard stat={30} label={'Restaurants'} icon={<BarChartOutlined style={{ fontSize: '48px' }} />} />
-        </Col>
-        <Col span={6}>
-          <BasicCard stat={320} label={'Customers'} icon={<BarChartOutlined style={{ fontSize: '48px' }} />} />
-        </Col>
-        <Col span={6}>
-          <BasicCard stat={20} label={'Delivery Person'} icon={<BarChartOutlined style={{ fontSize: '48px' }} />} />
-        </Col>
-      </Row>
-      <Row gutter={20} style={{ marginTop: 20 }}>
-        <Col span={12}>
-          <Card style={{ paddingLeft: 20 }} bodyStyle={{ padding: '0' }}>
-            <h1>Order From Head Quarter</h1>
-            <OrderPieChart data={ChartData2} />
-          </Card>
-        </Col>
-        <Col span={12}>
-          <Card style={{ paddingLeft: 20 }} bodyStyle={{ padding: '0' }}>
-            <h1>Order from Hotel</h1>
-            <OrderBarChart data={ChartData1} />
-          </Card>
-        </Col>
-      </Row>
-      <Card
-        bodyStyle={{ padding: '0' }}
-        style={{
-          marginTop: 20,
-          paddingLeft: 20,
-        }}
-      >
-        <h1>Order Distribution Over the Week</h1>
-        <LineChart data={ChartData1} />
-      </Card>
-    </div>
-  );
+	const [orderCount, setOrderCount] = useState(0);
+	const [restaurantCount, setRestaurantCount] = useState(0);
+	const [customerCount, setCustomerCount] = useState(0);
+	const [deliveryPersonCount, setDeliveryPersonCount] = useState(0);
+
+	const breakpoint = useBreakpoint();
+	const { data: restaurants } = useQuery(GET_RESTAURANTS);
+	const { data: orders } = useQuery(GET_ORDERS);
+	const { data: users } = useQuery(GET_USERS);
+
+	useEffect(() => {
+		if (restaurants) {
+			setRestaurantCount(restaurants.restaurants.length);
+		}
+		if (orders) {
+			setOrderCount(orders.getAllOrders.length);
+		}
+		if (users) {
+			setCustomerCount(
+				users.users.filter((user: any) => user.role === "Customer").length
+			);
+			setDeliveryPersonCount(
+				users.users.filter((user: any) => user.role === "DeliveryPerson").length
+			);
+		}
+	}, [restaurants, orders, users]);
+
+	return (
+		<div style={{}}>
+			<h1>Dashboard</h1>
+			<Row gutter={{ xs: 4, sm: 6, md: 32 }} wrap style={{}}>
+				<Col span={6}>
+					<BasicCard
+						stat={orderCount}
+						label={"Orders"}
+						icon={
+							<BarChartOutlined
+								style={{ fontSize: breakpoint > 768 ? "48px" : "12px" }}
+							/>
+						}
+					/>
+				</Col>
+				<Col span={6}>
+					<BasicCard
+						stat={restaurantCount}
+						label={"Restaurants"}
+						icon={<BarChartOutlined style={{ fontSize: "48px" }} />}
+					/>
+				</Col>
+				<Col span={6}>
+					<BasicCard
+						stat={customerCount}
+						label={"Customers"}
+						icon={<BarChartOutlined style={{ fontSize: "48px" }} />}
+					/>
+				</Col>
+				<Col span={6}>
+					<BasicCard
+						stat={deliveryPersonCount}
+						label={"Delivery Person"}
+						icon={<BarChartOutlined style={{ fontSize: "48px" }} />}
+					/>
+				</Col>
+			</Row>
+			<Row gutter={20} style={{ marginTop: 20 }}>
+				<Col span={12}>
+					<Card style={{ paddingLeft: 20 }} bodyStyle={{ padding: "0" }}>
+						<h1>Booked Order From Head Quarter</h1>
+						<OrderPieChart data={ChartData2} />
+					</Card>
+				</Col>
+				<Col span={12}>
+					<Card style={{ paddingLeft: 5 }} bodyStyle={{ padding: "0" }}>
+						<h1 style={{ marginLeft: 15 }}>Weekly Orders</h1>
+						<OrderBarChart data={ChartData1} />
+					</Card>
+				</Col>
+			</Row>
+			<Card
+				bodyStyle={{ padding: "0" }}
+				style={{
+					marginTop: 20,
+					paddingLeft: 20,
+				}}
+			>
+				<h1>Order Distribution Over the Week</h1>
+				<LineChart data={ChartData1} />
+			</Card>
+		</div>
+	);
 };
 
 export default Dashboard;

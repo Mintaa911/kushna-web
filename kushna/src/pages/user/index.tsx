@@ -1,14 +1,23 @@
-import { Button, Card, Form, Input, Modal, Select } from "antd";
+import { Button, Card, Form, Input, Modal, Select, message } from "antd";
 import UserTable from "../../components/user/UserTable";
 import { PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Create_User } from "../../graphql/mutation";
+import { GET_RESTAURANTS } from "../../graphql/query";
+
+interface Restaurant {
+	value: string;
+	label: string;
+}
 
 const User = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [restaurants, setRestaurants] = useState([] as Array<Restaurant>);
+	const [isManager, setIsManager] = useState(false);
 
 	const [createUser, { loading, data }] = useMutation(Create_User);
+	const { data: restaurantData } = useQuery(GET_RESTAURANTS);
 	const showModal = () => {
 		setIsModalOpen(true);
 	};
@@ -21,9 +30,16 @@ const User = () => {
 	};
 	useEffect(() => {
 		if (data) {
-			console.log("successfully created User!");
+			message.success("successfully created User!");
 		}
-	}, [data]);
+		if (restaurantData) {
+			setRestaurants([
+				...restaurantData.restaurants.map((val: any) => {
+					return { value: val.id, label: val.name };
+				}),
+			]);
+		}
+	}, [data, restaurantData]);
 
 	const onFinishFailed = (errorInfo: any) => {
 		console.log("Failed:", errorInfo);
@@ -119,13 +135,24 @@ const User = () => {
 						style={{ marginBottom: 20 }}
 					>
 						<Select
-							defaultValue='RestaurantManager'
-							onChange={() => {}}
+							onChange={(val) => {
+								if (val === "RestaurantManager") {
+									setIsManager(true);
+								}
+							}}
 							options={[
 								{ value: "RestaurantManager", label: "Restaurant Manager" },
 								{ value: "DeliveryPerson", label: "Delivery Person" },
 							]}
 						/>
+					</Form.Item>
+					<Form.Item
+						label='Restaurant'
+						name='restaurantId'
+						rules={[{ required: true, message: "Please input restaurant!" }]}
+						style={{ marginBottom: 20, display: isManager ? "block" : "none" }}
+					>
+						<Select onChange={() => {}} options={restaurants} />
 					</Form.Item>
 					<Form.Item style={{ display: "flex", justifyContent: "center" }}>
 						<Button loading={loading} type='primary' htmlType='submit'>
