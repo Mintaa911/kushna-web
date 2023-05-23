@@ -1,25 +1,27 @@
-import { createContext, ReactNode } from "react";
-// import AuthReducer from "./AuthReducer";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 
-const INITIAL_STATE = {
-	currentUser: null,
-};
+const INITIAL_STATE = JSON.parse(localStorage.getItem("token") || "{}");
 
-export const AuthContext = createContext(INITIAL_STATE);
+export const AuthContext = createContext<{
+	token: string;
+	setToken: React.Dispatch<any>;
+}>({
+	token: INITIAL_STATE,
+	setToken: () => null,
+});
 
 interface LayoutProps {
 	children: ReactNode;
 }
 
 export const AuthContextProvider = (props: LayoutProps) => {
-	// const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
-
-	// useEffect(() => {
-	// localStorage.setItem("user", JSON.stringify(state.currentUser));
-	// }, [state.currentUser]);
+	const [token, setToken] = useState(INITIAL_STATE);
+	useEffect(() => {
+		localStorage.setItem("token", JSON.stringify(token));
+	}, [token]);
 
 	return (
-		<AuthContext.Provider value={{ currentUser: null }}>
+		<AuthContext.Provider value={{ token, setToken }}>
 			{props.children}
 		</AuthContext.Provider>
 	);

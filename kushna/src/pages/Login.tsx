@@ -1,10 +1,31 @@
 import { Button, Card, Form, Input, Layout, Typography } from "antd";
-
+import { LOGIN_USER } from "../graphql/mutation";
+import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 const { Content } = Layout;
 
 export default function Login() {
-	const onFinish = (values: any) => {
-		alert(`${JSON.stringify(values)}`);
+	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
+	const [loginUser] = useMutation(LOGIN_USER);
+	const { token, setToken } = useContext(AuthContext);
+
+	useEffect(() => {
+		if (token) {
+			navigate("/");
+		}
+	}, [token]);
+
+	const onFinish = async (values: any) => {
+		setLoading(true);
+		const { data } = await loginUser({ variables: { input: values } });
+		if (data.login) {
+			setToken(data.login.token);
+			navigate("/");
+		}
+		setLoading(false);
 	};
 
 	const onFinishFailed = (errorInfo: any) => {
@@ -16,15 +37,17 @@ export default function Login() {
 				height: "100vh",
 				margin: 0,
 				padding: 0,
+				marginTop: "10%",
 				display: "flex",
-				alignItems: "center",
+				// alignItems: "center",
 				justifyContent: "center",
 			}}
 		>
 			<Card
 				style={{
-					background: "#EEEEEE",
+					background: "#ddd",
 					width: "40%",
+					height: "fit-content",
 				}}
 				bodyStyle={{ padding: 0 }}
 			>
@@ -63,12 +86,7 @@ export default function Login() {
 					<Form.Item
 					// style={{ width: "100%", display: "flex", justifyContent: "center" }}
 					>
-						<Button
-							// loading={loading}
-							block
-							type='primary'
-							htmlType='submit'
-						>
+						<Button loading={loading} block type='primary' htmlType='submit'>
 							Sign in
 						</Button>
 					</Form.Item>
