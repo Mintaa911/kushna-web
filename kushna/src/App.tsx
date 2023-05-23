@@ -7,29 +7,42 @@ import User from "./pages/user";
 import Dashboard from "./pages/Dashboard";
 import Order from "./pages/order";
 import Restaurant from "./pages/restaurant";
-import CreateRestaurant from "./pages/restaurant/create";
 import Login from "./pages/Login";
+import RequireAuth from "./components/common/RequireAuth";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <MainLayout children={<Dashboard />} label='Dashboard' />,
+		element: (
+			<RequireAuth>
+				<MainLayout children={<Dashboard />} label='Dashboard' />
+			</RequireAuth>
+		),
 	},
 	{
 		path: "/restaurant",
-		element: <MainLayout children={<Restaurant />} label='Dashboard' />,
+		element: (
+			<RequireAuth>
+				<MainLayout children={<Restaurant />} label='Restaurant' />
+			</RequireAuth>
+		),
 	},
-	{
-		path: "/restaurant/create",
-		element: <MainLayout children={<CreateRestaurant />} label='Dashboard' />,
-	},
+
 	{
 		path: "/order",
-		element: <MainLayout children={<Order />} label='Dashboard' />,
+		element: (
+			<RequireAuth>
+				<MainLayout children={<Order />} label='Order' />
+			</RequireAuth>
+		),
 	},
 	{
 		path: "/user",
-		element: <MainLayout children={<User />} label='Dashboard' />,
+		element: (
+			<RequireAuth>
+				<MainLayout children={<User />} label='User' />
+			</RequireAuth>
+		),
 	},
 	{
 		path: "/login",

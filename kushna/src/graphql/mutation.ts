@@ -5,7 +5,6 @@ export const LOGIN_USER = gql`
 		login(input: $input) {
 			id
 			role
-			expiresAt
 			token
 		}
 	}
