@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 
-export const GET_Foods = gql`
-	query Foods {
-		foods {
+export const GET_Foods_From_Restaurant = gql`
+	query FoodFromRestaurant($restaurantId: Int!) {
+		foodFromRestaurant(restaurantId: $restaurantId) {
 			id
 			name
+			restaurantId
 			description
 			images
 			price
@@ -14,6 +15,15 @@ export const GET_Foods = gql`
 				name
 				description
 				price
+			}
+			reviews {
+				id
+				rating
+				comment
+				reviewer {
+					firstName
+					lastName
+				}
 			}
 		}
 	}
@@ -61,6 +71,21 @@ export const GET_ORDER_HISTORY = gql`
 			}
 			transactionNumber
 			orderStatus
+		}
+	}
+`;
+
+export const GET_MANAGER = gql`
+	query Query($managerId: Int!) {
+		manager(id: $managerId) {
+			id
+			restaurant {
+				id
+			}
+			user {
+				firstName
+				lastName
+			}
 		}
 	}
 `;

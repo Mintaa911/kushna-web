@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Layout, message, Typography } from "antd";
+import { Button, Card, Form, Input, Layout, Typography } from "antd";
 import { LOGIN_USER } from "../graphql/mutation";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,11 @@ const { Content } = Layout;
 export default function Login() {
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
-	const [loginUser,{error}] = useMutation(LOGIN_USER);
-	const { token, setToken } = useContext(AuthContext);
+	const [loginUser] = useMutation(LOGIN_USER);
+	const { token, setToken, setUserId } = useContext(AuthContext);
 
 	useEffect(() => {
-		if (token) {
+		if (token && Object.keys(token).length !== 0) {
 			navigate("/");
 		}
 	}, [token]);
@@ -23,10 +23,8 @@ export default function Login() {
 		const { data } = await loginUser({ variables: { input: values } });
 		if (data.login) {
 			setToken(data.login.token);
+			setUserId(data.login.id);
 			navigate("/");
-		}
-		if(error){
-			message.error(error.message)
 		}
 		setLoading(false);
 	};
