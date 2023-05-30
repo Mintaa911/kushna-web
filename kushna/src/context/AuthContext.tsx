@@ -1,12 +1,12 @@
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 
-const INITIAL_STATE = JSON.parse(localStorage.getItem("token") || "{}");
+const INITIAL_TOKEN = localStorage.getItem("token") || "";
 
 export const AuthContext = createContext<{
 	token: string;
 	setToken: React.Dispatch<any>;
 }>({
-	token: INITIAL_STATE,
+	token: INITIAL_TOKEN,
 	setToken: () => null,
 });
 
@@ -15,9 +15,9 @@ interface LayoutProps {
 }
 
 export const AuthContextProvider = (props: LayoutProps) => {
-	const [token, setToken] = useState(INITIAL_STATE);
+	const [token, setToken] = useState(INITIAL_TOKEN);
 	useEffect(() => {
-		localStorage.setItem("token", JSON.stringify(token));
+		localStorage.setItem("token", token);
 	}, [token]);
 
 	return (

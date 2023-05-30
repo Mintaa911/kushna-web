@@ -6,7 +6,7 @@ const RequireAuth = ({ children }: { children: ReactNode }) => {
 	const { token } = useContext(AuthContext);
 	const navigate = useNavigate();
 	useEffect(() => {
-		if (!token || Object.keys(token).length === 0) {
+		if (!token) {
 			navigate("/login");
 		}
 	});
