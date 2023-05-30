@@ -16,8 +16,28 @@ export const CREATE_FOOD = gql`
 				description
 				price
 			}
-
 			createdAt
+		}
+	}
+`;
+
+export const LOGIN_USER = gql`
+	mutation Mutation($input: LoginInput!) {
+		login(input: $input) {
+			id
+			role
+			token
+		}
+	}
+`;
+
+export const CREATE_COUPON = gql`
+	mutation CreateCoupon($input: CouponInput!) {
+		createCoupon(input: $input) {
+			numberOfTimesUsed
+			isActive
+			code
+			discount
 		}
 	}
 `;

@@ -1,8 +1,8 @@
-import { initializeApp } from 'firebase/app';
-import { getStorage } from 'firebase/storage';
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  storageBucket: 'gs://casino-challenge.appspot.com',
+	storageBucket: "gs://kushna-delivery.appspot.com",
 };
 
 // Initialize Firebase

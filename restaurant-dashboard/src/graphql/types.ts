@@ -3,12 +3,19 @@ export type Foods = {
 	name: string;
 	description: string;
 	images: Array<string>;
-	price: Float32Array;
+	price: number;
 	status: string;
 	variables: {
 		id: string;
 		name: string;
 		description: string;
-		price: Float32Array;
+		price: number;
 	};
+	reviews: [Review];
+};
+
+type Review = {
+	id: string;
+	rating: number;
+	comment: string;
 };
