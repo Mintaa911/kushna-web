@@ -10,6 +10,7 @@ import useBreakpoint from "../hooks/UseBreakpoint";
 import { useQuery } from "@apollo/client";
 import { GET_MANAGER } from "../graphql/query";
 import { AuthContext } from "../context/AuthContext";
+import ErrorPage from "../components/common/Error";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -75,8 +76,7 @@ const MainLayout = ({ children, label }: LayoutProps) => {
 		setRestaurantId(data.manager.restaurant.id);
 	}
 	if (error) {
-		console.log(error);
-		return <p>error!!!</p>;
+		return <ErrorPage />;
 	}
 
 	return (

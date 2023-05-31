@@ -109,9 +109,8 @@ function CreateRestaurantModal({ isModalOpen, setIsModalOpen }: IProps) {
 
 			// clear file list
 			// setFileList([]);
-		} catch (error) {
-			console.log(error);
-			console.log("Do something about it");
+		} catch (error: any) {
+			message.error(error.message);
 		} finally {
 			setIsLoading(false);
 		}

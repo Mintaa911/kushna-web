@@ -6,15 +6,26 @@ export const CREATE_FOOD = gql`
 			id
 			name
 			description
-			images
 			price
-			restaurantId
+			images
 			status
 			variables {
 				id
 				name
 				description
 				price
+			}
+			reviews {
+				id
+				rating
+				comment
+				reviewer {
+					id
+					firstName
+					lastName
+					email
+					role
+				}
 			}
 			createdAt
 		}

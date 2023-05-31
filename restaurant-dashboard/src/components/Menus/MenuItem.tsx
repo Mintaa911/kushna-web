@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Card, Col, Modal, Row } from "antd";
+import React from "react";
+import { Card, Col, Row } from "antd";
 import { Foods } from "../../graphql/types";
 import { StarOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -70,26 +70,3 @@ const MenuItem = (item: Foods) => {
 };
 
 export default MenuItem;
-
-interface IProps {
-	isModalOpen: boolean;
-	setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const MenuDetail = ({ isModalOpen, setIsModalOpen }: IProps) => {
-	const showModal = () => {
-		setIsModalOpen(true);
-	};
-
-	const handleCancel = () => {
-		setIsModalOpen(false);
-	};
-	return (
-		<Modal
-			title='Menu Detail'
-			open={isModalOpen}
-			onCancel={handleCancel}
-			footer={null}
-		></Modal>
-	);
-};

@@ -12,11 +12,13 @@ interface Restaurant {
 }
 
 const User = () => {
+	const [loading, setIsLoading] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [restaurants, setRestaurants] = useState([] as Array<Restaurant>);
 	const [isManager, setIsManager] = useState(false);
+	const [form] = Form.useForm();
 
-	const [createUser, { loading, data }] = useMutation(Create_User);
+	const [createUser] = useMutation(Create_User);
 	const { data: restaurantData } = useQuery(GET_RESTAURANTS);
 	const showModal = () => {
 		setIsModalOpen(true);
@@ -25,13 +27,21 @@ const User = () => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
-	const onFinish = (values: any) => {
-		createUser({ variables: { input: values } });
+	const onFinish = async (values: any) => {
+		setIsLoading(true);
+		try {
+			const { data } = await createUser({ variables: { input: values } });
+			if (data) {
+				message.success("successfully created User!");
+				form.resetFields();
+			}
+		} catch (error: any) {
+			message.error(error.message);
+		} finally {
+			setIsLoading(false);
+		}
 	};
 	useEffect(() => {
-		if (data) {
-			message.success("successfully created User!");
-		}
 		if (restaurantData) {
 			setRestaurants([
 				...restaurantData.restaurants.map((val: any) => {
@@ -39,7 +49,7 @@ const User = () => {
 				}),
 			]);
 		}
-	}, [data, restaurantData]);
+	}, [restaurantData]);
 
 	const onFinishFailed = (errorInfo: any) => {
 		console.log("Failed:", errorInfo);
@@ -80,6 +90,7 @@ const User = () => {
 				footer={null}
 			>
 				<Form
+					form={form}
 					name='basic'
 					layout='vertical'
 					initialValues={{ remember: true }}

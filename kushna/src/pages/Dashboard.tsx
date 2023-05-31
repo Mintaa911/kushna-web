@@ -1,14 +1,15 @@
-import { Row, Col, Card } from "antd";
+import { Row, Col, Card, Skeleton } from "antd";
 import { BarChartOutlined } from "@ant-design/icons";
 import BasicCard from "../components/common/BasicCard";
 import useBreakpoint from "../hooks/UseBreakpoint";
-import { ChartData1, ChartData2 } from "../data/SampleData";
+import { ChartData1 } from "../data/SampleData";
 import OrderBarChart from "../components/dashboard/BarChart";
 import OrderPieChart from "../components/dashboard/PieChart";
 import LineChart from "../components/dashboard/LineChart";
 import { useQuery } from "@apollo/client";
 import { GET_ORDERS, GET_RESTAURANTS, GET_USERS } from "../graphql/query";
 import { useEffect, useState } from "react";
+import ErrorPage from "../components/common/Error";
 
 const Dashboard = () => {
 	const [orderCount, setOrderCount] = useState(0);
@@ -17,9 +18,21 @@ const Dashboard = () => {
 	const [deliveryPersonCount, setDeliveryPersonCount] = useState(0);
 
 	const breakpoint = useBreakpoint();
-	const { data: restaurants } = useQuery(GET_RESTAURANTS);
-	const { data: orders } = useQuery(GET_ORDERS);
-	const { data: users } = useQuery(GET_USERS);
+	const {
+		data: restaurants,
+		loading: loadingRestaurant,
+		error: restaurantError,
+	} = useQuery(GET_RESTAURANTS);
+	const {
+		data: orders,
+		loading: loadingOrder,
+		error: orderError,
+	} = useQuery(GET_ORDERS);
+	const {
+		data: users,
+		loading: loadingUser,
+		error: userError,
+	} = useQuery(GET_USERS);
 
 	useEffect(() => {
 		if (restaurants) {
@@ -37,6 +50,13 @@ const Dashboard = () => {
 			);
 		}
 	}, [restaurants, orders, users]);
+
+	if (loadingUser || loadingOrder || loadingRestaurant) {
+		return <Skeleton />;
+	}
+	if (restaurantError || orderError || userError) {
+		return <ErrorPage />;
+	}
 
 	return (
 		<div style={{}}>
@@ -79,13 +99,13 @@ const Dashboard = () => {
 				<Col span={12}>
 					<Card style={{ paddingLeft: 20 }} bodyStyle={{ padding: "0" }}>
 						<h1>Booked Order From Head Quarter</h1>
-						<OrderPieChart data={ChartData2} />
+						<OrderPieChart data={orders.getAllOrders} />
 					</Card>
 				</Col>
 				<Col span={12}>
 					<Card style={{ paddingLeft: 5 }} bodyStyle={{ padding: "0" }}>
-						<h1 style={{ marginLeft: 15 }}>Weekly Orders</h1>
-						<OrderBarChart data={ChartData1} />
+						<h1 style={{ marginLeft: 15 }}>Order Distribution by day</h1>
+						<OrderBarChart data={orders.getAllOrders} />
 					</Card>
 				</Col>
 			</Row>
