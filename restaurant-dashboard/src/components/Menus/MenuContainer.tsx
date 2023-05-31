@@ -20,7 +20,7 @@ import BannerUpload from "./BannerUpload";
 import { uploadRestaurantBanner } from "../../utils/image";
 import { AuthContext } from "../../context/AuthContext";
 import { PlusOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import ErrorPage from "../common/Error";
 
 export default function MenuContainer() {
 	const { restaurantId } = useContext(AuthContext);
@@ -35,14 +35,14 @@ export default function MenuContainer() {
 		return <Skeleton active />;
 	}
 	if (error) {
-		console.log(error);
+		<ErrorPage />;
 	}
 
 	return (
 		<div>
 			<Row>
 				<Col>
-					<h1>Menu Container</h1>
+					<h1>Menu</h1>
 				</Col>
 				<Col style={{ marginLeft: "auto", gap: 4 }}>
 					<Button
@@ -97,7 +97,7 @@ export default function MenuContainer() {
 					  })
 					: "No Result"}
 			</Row>
-			<CreateRestaurantModal
+			<CreateFoodModal
 				isModalOpen={isModalOpen}
 				setIsModalOpen={setIsModalOpen}
 			/>
@@ -125,12 +125,11 @@ interface IProps {
 	setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	foods?: [];
 }
-function CreateRestaurantModal({ isModalOpen, setIsModalOpen }: IProps) {
+function CreateFoodModal({ isModalOpen, setIsModalOpen }: IProps) {
 	const [fileList, setFileList] = useState(Array<RcFile>());
 	const [isLoading, setIsLoading] = useState(false);
 	const { restaurantId } = useContext(AuthContext);
 	const [form] = Form.useForm();
-	const navigate = useNavigate();
 	const [createMenu] = useMutation(CREATE_FOOD);
 
 	const handleCancel = () => {
@@ -142,8 +141,6 @@ function CreateRestaurantModal({ isModalOpen, setIsModalOpen }: IProps) {
 	};
 
 	const onFinish = async (values: any) => {
-		console.log(values);
-
 		try {
 			setIsLoading(true);
 			if (fileList.length === 0) {
@@ -174,15 +171,12 @@ function CreateRestaurantModal({ isModalOpen, setIsModalOpen }: IProps) {
 					"Uploaded image to storage and created a restaurant record on DB"
 				);
 				form.resetFields();
-				navigate(0);
 			}
 
 			// clear file list
-			// setFileList([]);
+			setFileList([]);
 		} catch (error: any) {
 			message.error(error.message);
-			console.log(error);
-			console.log("Do something about it");
 		} finally {
 			setIsLoading(false);
 		}

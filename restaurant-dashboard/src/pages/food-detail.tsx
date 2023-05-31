@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 
 const FoodDetailPage = () => {
 	const { state } = useLocation();
-	console.log(state);
 	const averageRating =
 		state.reviews.length > 0
 			? state.reviews
@@ -12,19 +11,28 @@ const FoodDetailPage = () => {
 					.reduce((prev: number, next: number) => prev + next)
 			: 0;
 
+	console.log(state.variables);
 	return (
 		<div>
-			<Card title='Food Detail' style={{ width: "80%", margin: "auto" }}>
+			<Card title='Food Detail' style={{}}>
 				<img
 					src={state.images[0]}
 					alt='Food'
-					style={{ width: "50%", height: "auto" }}
+					style={{ width: "400px", height: "400px" }}
 				/>
 
 				<p>Name: {state.name}</p>
 				{/* <p>Type: Italian</p> */}
 				<p>Price: ${state.price}</p>
-				<p>Ingredients: Cheese, Tomato, Pepperoni</p>
+
+				<p>
+					Ingredients:{" "}
+					{state.variables.length > 0
+						? state.variables.map((variable: any) => {
+								return <span key={variable.id}>{variable.name}</span>;
+						  })
+						: ""}
+				</p>
 				<p>Description: {state.description}</p>
 				<div style={{ marginTop: 16 }}>
 					<h3>Average Rating</h3>
@@ -40,8 +48,8 @@ const FoodDetailPage = () => {
 										<p>
 											{review.reviewer.firstName} {review.reviewer.lastName}
 										</p>
-										<p>{state.review.description}</p>
-										<Rate disabled defaultValue={state.review.rating} />
+										<p>{review.comment}</p>
+										<Rate disabled defaultValue={review.rating} />
 									</div>
 								);
 						  })

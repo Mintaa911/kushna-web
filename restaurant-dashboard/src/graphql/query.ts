@@ -5,10 +5,9 @@ export const GET_Foods_From_Restaurant = gql`
 		foodFromRestaurant(restaurantId: $restaurantId) {
 			id
 			name
-			restaurantId
 			description
-			images
 			price
+			images
 			status
 			variables {
 				id
@@ -19,12 +18,16 @@ export const GET_Foods_From_Restaurant = gql`
 			reviews {
 				id
 				rating
-				comment
 				reviewer {
+					id
 					firstName
 					lastName
+					email
+					role
 				}
+				comment
 			}
+			createdAt
 		}
 	}
 `;
