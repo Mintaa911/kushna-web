@@ -11,7 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useBreakpoint from "../hooks/UseBreakpoint";
 import { AuthContext } from "../context/AuthContext";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -123,7 +123,6 @@ const MainLayout = ({ children, label }: LayoutProps) => {
 					>
 						{children}
 					</Content>
-				
 				</Layout>
 			</div>
 		</RequireAuth>

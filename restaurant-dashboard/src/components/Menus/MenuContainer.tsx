@@ -14,7 +14,11 @@ import MenuItem from "./MenuItem";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_Foods_From_Restaurant } from "../../graphql/query";
 import { Foods } from "../../graphql/types";
-import { CREATE_COUPON, CREATE_FOOD } from "../../graphql/mutation";
+import {
+	CREATE_COUPON,
+	CREATE_FOOD,
+	CREATE_FOOD_VARIABLE,
+} from "../../graphql/mutation";
 import { RcFile } from "antd/es/upload";
 import BannerUpload from "./BannerUpload";
 import { uploadRestaurantBanner } from "../../utils/image";
@@ -89,10 +93,12 @@ export default function MenuContainer() {
 			<Row gutter={2} wrap>
 				{data
 					? data.foodFromRestaurant.map((item: Foods) => {
-							return (
+							return item.status === "AVAILABLE" ? (
 								<Col lg={6} key={item.id}>
 									<MenuItem {...item} />
 								</Col>
+							) : (
+								""
 							);
 					  })
 					: "No Result"}
@@ -252,36 +258,36 @@ function CreateFoodModal({ isModalOpen, setIsModalOpen }: IProps) {
 
 function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 	const [isLoading, setIsLoading] = useState(false);
-
-	const [createVariable] = useMutation(CREATE_FOOD);
+	const [form] = Form.useForm();
+	const [createFoodVariable] = useMutation(CREATE_FOOD_VARIABLE);
 
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
 
 	const onFinishFailed = (errorInfo: any) => {
-		console.log("Failed:", errorInfo);
+		// console.log("Failed:", errorInfo);
 	};
 
 	const onFinish = async (values: any) => {
-		console.log(values);
-
 		try {
 			setIsLoading(true);
 
-			// await createVariable({
-			// 	variables: {
-			// 		input: {
-			// 			...values,
-			// 		},
-			// 	},
-			// });
+			const { data } = await createFoodVariable({
+				variables: {
+					input: {
+						...values,
+						price: parseFloat(values.price),
+					},
+				},
+			});
 
-			// clear file list
-			// setFileList([]);
-		} catch (error) {
-			console.log(error);
-			console.log("Do something about it");
+			if (data) {
+				message.success("Food Variable successfully created!");
+				form.resetFields();
+			}
+		} catch (error: any) {
+			message.error(error.message);
 		} finally {
 			setIsLoading(false);
 		}
@@ -307,7 +313,8 @@ function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 			footer={null}
 		>
 			<Form
-				name='variable'
+				form={form}
+				name='Food Variable'
 				layout='vertical'
 				onFinish={onFinish}
 				onFinishFailed={onFinishFailed}
@@ -344,7 +351,7 @@ function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 				</Form.Item>
 				<Form.Item
 					label='Food'
-					name='food'
+					name='foodId'
 					rules={[{ required: true, message: "Please input user type!" }]}
 					style={{ marginBottom: 20 }}
 				>

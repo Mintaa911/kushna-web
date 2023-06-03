@@ -33,47 +33,92 @@ export const GET_Foods_From_Restaurant = gql`
 `;
 
 export const GET_ORDER_HISTORY = gql`
-	query GetAllOrders {
+	query Query {
 		getAllOrders {
 			id
 			createdAt
 			customer {
 				id
 				user {
+					id
 					firstName
 					lastName
+					email
+					role
 				}
 			}
 			deliveryType
 			paymentStatus
-			deliveryPerson {
-				id
-			}
 			totalPrice
-			destination {
-				id
-				latitude
-				longitude
-			}
-			headQuarter {
-				id
-				name
-				location {
-					id
-					latitude
-					longitude
-				}
-			}
 			subOrders {
 				id
-			}
-			currentLocation {
-				id
-				latitude
-				longitude
+				orderedFoods {
+					id
+					food {
+						id
+						name
+						price
+						images
+						description
+						status
+						variables {
+							id
+							name
+							description
+							price
+							foodId
+						}
+						reviews {
+							id
+							rating
+							comment
+						}
+						createdAt
+						restaurant {
+							id
+							name
+							address
+							phone
+							email
+							description
+							openingHour
+							closingHour
+							restaurantType
+							status
+							reviews {
+								id
+								rating
+								comment
+							}
+							banner
+						}
+					}
+					quantity
+					variables {
+						id
+						variable {
+							id
+							name
+							description
+							price
+							foodId
+						}
+						quantity
+					}
+				}
+				deliveryGuy {
+					id
+					user {
+						id
+					}
+				}
+				orderStatus
+				deliveredAt
 			}
 			transactionNumber
 			orderStatus
+			booked
+			bookedTime
 		}
 	}
 `;
