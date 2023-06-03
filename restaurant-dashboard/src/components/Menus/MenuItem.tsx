@@ -1,8 +1,10 @@
 import React from "react";
-import { Card, Col, Row } from "antd";
+import { Card, Col, message, Row } from "antd";
 import { Foods } from "../../graphql/types";
-import { StarOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, StarOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@apollo/client";
+import { DELETE_FOOD } from "../../graphql/mutation";
 const { Meta } = Card;
 
 export interface IMenuItem {
@@ -17,6 +19,20 @@ export interface IMenuItem {
 
 const MenuItem = (item: Foods) => {
 	const navigate = useNavigate();
+	const [deleteFood] = useMutation(DELETE_FOOD);
+
+	const handleDeleteFood = (id: number) => {
+		deleteFood({ variables: { deleteFoodId: id } })
+			.then((data) => {
+				console.log(data);
+				message.success("Food successfully deleted!");
+				// navigate(0);
+			})
+			.catch((error: any) => {
+				console.log(error.message);
+				message.error(error.message);
+			});
+	};
 	return (
 		<div>
 			<Card
@@ -37,21 +53,27 @@ const MenuItem = (item: Foods) => {
 					/>
 				}
 			>
-				<Meta title={item.name} />
-				<Row gutter={0}>
-					<Col span={8} style={{ color: "gray" }}>
-						${item.price}
-					</Col>
-					<Col span={8} style={{ color: "gray" }}>
-						{/* {time} */}
-					</Col>
-					<Col span={8} style={{ color: "white", justifyItems: "center" }}>
+				<Meta
+					title={
+						<Row style={{ display: "flex", justifyContent: "space-between" }}>
+							<Col>{item.name}</Col>
+							<Col style={{ fontWeight: 700, fontSize: "1.1rem" }}>
+								${item.price}
+							</Col>
+						</Row>
+					}
+				/>
+				<Row
+					style={{
+						width: "full",
+						display: "flex",
+						justifyContent: "space-between",
+					}}
+				>
+					<Col span={8}>
 						<div
 							style={{
-								backgroundColor: "orange",
 								width: "90%",
-								borderRadius: "5px",
-								padding: "2px 4px",
 							}}
 						>
 							<StarOutlined />
@@ -63,6 +85,22 @@ const MenuItem = (item: Foods) => {
 								: 0}
 						</div>
 					</Col>
+					<Col span={8} style={{ justifyItems: "center" }}></Col>
+				</Row>
+				<Row
+					style={{
+						width: "full",
+						display: "flex",
+						justifyContent: "end",
+					}}
+				>
+					<EditOutlined style={{ marginRight: 15 }} onClick={() => {}} />
+					<DeleteOutlined
+						onClick={(e) => {
+							e.stopPropagation();
+							handleDeleteFood(item.id);
+						}}
+					/>
 				</Row>
 			</Card>
 		</div>

@@ -1,18 +1,22 @@
 import { Table, Modal } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_ORDER_HISTORY } from "../../graphql/query";
+import { AuthContext } from "../../context/AuthContext";
 
 interface DataType {
-	id: string;
-	customer: {
-		first: string;
-		last: string;
-	};
-	gender: string;
-	email: string;
+	orderId: number;
+	name: string;
+	foodId: number;
+	description: string;
+	price: Float32Array;
+	status: string;
+	variable: Array<Object>;
+	image: Array<string>;
+	quantity: number;
+	createdAt: string;
 }
 
 interface TableParams {
@@ -24,37 +28,26 @@ interface TableParams {
 
 const columns: ColumnsType<DataType> = [
 	{
-		title: "Customer",
-		dataIndex: "customer",
+		title: "Food",
+		dataIndex: "name",
 		sorter: true,
-		render: (customer) =>
-			`${customer.user.firstName} ${customer.user.lastName}`,
-		// width: "30%",
+	},
+	{
+		title: "Price",
+		dataIndex: "price",
 	},
 	{
 		title: "Quantity",
 		dataIndex: "quantity",
 	},
 	{
-		title: "Price",
-		dataIndex: "totalPrice",
-	},
-	{
-		title: "Delivery Type",
-		dataIndex: "deliveryType",
-	},
-	{
-		title: "Payment Status",
-		dataIndex: "paymentStatus",
-	},
-	{
 		title: "Status",
-		dataIndex: "orderStatus",
+		dataIndex: "status",
 	},
 ];
 
 const OrderHistoryTable = () => {
-	const [data, setData] = useState<DataType[]>();
+	const [orderHistory, setOrderHistory] = useState<DataType[]>();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [tableParams, setTableParams] = useState<TableParams>({
 		pagination: {
@@ -63,14 +56,16 @@ const OrderHistoryTable = () => {
 			showSizeChanger: false,
 		},
 	});
-
+	const { restaurantId } = useContext(AuthContext);
 	const { loading, data: dataQuery } = useQuery(GET_ORDER_HISTORY);
 
 	useEffect(() => {
 		if (dataQuery) {
-			setData(dataQuery.getAllOrders);
+			const mapped = mapOrderByRestaurant(dataQuery.getAllOrders, restaurantId);
+
+			setOrderHistory(mapOrderForTable(mapped));
 		}
-	}, [dataQuery]);
+	}, [dataQuery, restaurantId]);
 
 	const handleTableChange = (
 		pagination: TablePaginationConfig,
@@ -85,7 +80,7 @@ const OrderHistoryTable = () => {
 
 		// `dataSource` is useless since `pageSize` changed
 		if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-			setData([]);
+			setOrderHistory([]);
 		}
 	};
 
@@ -107,8 +102,8 @@ const OrderHistoryTable = () => {
 					};
 				}}
 				columns={columns}
-				rowKey={(record) => record.id}
-				dataSource={data}
+				rowKey={(record) => record.orderId}
+				dataSource={orderHistory}
 				pagination={tableParams.pagination}
 				loading={loading}
 				onChange={handleTableChange}
@@ -126,3 +121,83 @@ const OrderHistoryTable = () => {
 };
 
 export default OrderHistoryTable;
+const mapOrderByRestaurant = (orders: any, restaurantId: number) => {
+	const mapped = orders.map((order: any) => {
+		const res = order.subOrders.map((subOrder: any) => {
+			const result = subOrder.orderedFoods.filter((orderedFood: any) => {
+				return orderedFood.food.restaurant.id === restaurantId;
+			});
+			console.log(subOrder.orderStatus);
+			return subOrder.orderStatus === "PREPARED" && result.length !== 0
+				? { ...subOrder, orderedFoods: result }
+				: [];
+		});
+
+		return res.length !== 0 ? res : [];
+	});
+
+	return mapped.flat(2);
+};
+
+type TableParamType = {
+	orderId: number;
+	name: string;
+	foodId: number;
+	description: string;
+	price: Float32Array;
+	status: string;
+	variable: Array<Object>;
+	image: Array<string>;
+	quantity: number;
+	createdAt: string;
+};
+
+type OrderFood = {
+	id: number;
+	quantity: number;
+	variables: Array<Object>;
+	food: Food;
+};
+
+type Food = {
+	id: number;
+	name: string;
+	description: string;
+	price: Float32Array;
+	images: Array<string>;
+	status: string;
+	variables: Array<Object>;
+	reviews: Array<Object>;
+	createdAt: string;
+};
+
+type SubOrder = {
+	deliveredAt: string;
+	deliveryGuy: Object;
+	id: number;
+	orderStatus: string;
+	orderedFoods: Array<OrderFood>;
+};
+
+const mapOrderForTable = (subOrder: Array<SubOrder>) => {
+	const tableParams = [];
+	for (let i = 0; i < subOrder.length; i++) {
+		for (let j = 0; j < subOrder[i].orderedFoods.length; j++) {
+			const obj = {} as TableParamType;
+			const element = subOrder[i].orderedFoods[j] as OrderFood;
+			obj.orderId = subOrder[i].id;
+			obj.foodId = element.food.id;
+			obj.name = element.food.name;
+			obj.description = element.food.description;
+			obj.price = element.food.price;
+			obj.image = element.food.images;
+			obj.variable = element.variables;
+			obj.status = subOrder[i].orderStatus;
+			obj.quantity = element.quantity;
+			obj.createdAt = element.food.createdAt;
+			tableParams.push(obj);
+		}
+	}
+
+	return tableParams;
+};

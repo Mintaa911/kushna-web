@@ -52,3 +52,114 @@ export const CREATE_COUPON = gql`
 		}
 	}
 `;
+
+export const CREATE_FOOD_VARIABLE = gql`
+	mutation CreateFoodVariable($input: FoodVariableInput!) {
+		createFoodVariable(input: $input) {
+			id
+			name
+			description
+			price
+			foodId
+		}
+	}
+`;
+
+export const DELETE_FOOD = gql`
+	mutation Mutation($deleteFoodId: Int!) {
+		deleteFood(id: $deleteFoodId) {
+			id
+			name
+			description
+			price
+			images
+			status
+			variables {
+				id
+				name
+				description
+				price
+				foodId
+			}
+			reviews {
+				id
+				rating
+				comment
+			}
+			createdAt
+		}
+	}
+`;
+
+export const UPDATE_SUBORDER_STATUS = gql`
+	mutation Mutation($updateSuborderStatusId: Int!, $status: OrderStatus!) {
+		updateSuborderStatus(id: $updateSuborderStatusId, status: $status) {
+			id
+			createdAt
+			customer {
+				id
+				user {
+					id
+					firstName
+					lastName
+					email
+					role
+				}
+			}
+			deliveryType
+			paymentStatus
+			totalPrice
+			subOrders {
+				id
+				orderedFoods {
+					id
+					food {
+						id
+						name
+						description
+						price
+						images
+						status
+						variables {
+							id
+							name
+							description
+							price
+							foodId
+						}
+						reviews {
+							id
+							rating
+							comment
+						}
+						createdAt
+					}
+					quantity
+					variables {
+						id
+						variable {
+							id
+							name
+							description
+							price
+							foodId
+						}
+						quantity
+					}
+				}
+				deliveryGuy {
+					id
+					user {
+						id
+						firstName
+						lastName
+						email
+						role
+					}
+				}
+				orderStatus
+			}
+			orderStatus
+		}
+	}
+`;
