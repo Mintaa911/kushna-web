@@ -119,3 +119,31 @@ export const GET_USERS = gql`
 		}
 	}
 `;
+
+export const GET_FOODS = gql`
+	query Foods {
+		foods {
+			id
+			name
+			reviews {
+				id
+				rating
+			}
+		}
+	}
+`;
+
+export const GET_RESTAURANTS_WITH_COUPON = gql`
+	query Restaurants {
+		restaurants {
+			id
+			name
+			cupons {
+				numberOfTimesUsed
+				isActive
+				code
+				discount
+			}
+		}
+	}
+`;

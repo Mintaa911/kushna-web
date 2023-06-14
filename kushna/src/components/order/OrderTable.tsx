@@ -1,4 +1,4 @@
-import { Table, Modal, Skeleton } from "antd";
+import { Table } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
@@ -75,7 +75,6 @@ const columns: ColumnsType<DataType> = [
 
 const OrderTable = () => {
 	const [data, setData] = useState<DataType[]>();
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [tableParams, setTableParams] = useState<TableParams>({
 		pagination: {
 			current: 1,
@@ -108,24 +107,9 @@ const OrderTable = () => {
 		}
 	};
 
-	const showModal = () => {
-		setIsModalOpen(true);
-	};
-
-	const handleCancel = () => {
-		setIsModalOpen(false);
-	};
-
 	return (
 		<div data-testid='table'>
 			<Table
-				onRow={(record, rowIndex) => {
-					return {
-						onClick: (event) => {
-							showModal();
-						}, // click row
-					};
-				}}
 				columns={columns}
 				rowKey={(record) => record.id}
 				dataSource={data}
@@ -133,14 +117,6 @@ const OrderTable = () => {
 				loading={loading}
 				onChange={handleTableChange}
 			/>
-			<Modal
-				title='Order Detail'
-				open={isModalOpen}
-				onCancel={handleCancel}
-				footer={null}
-			>
-				<p>detail</p>
-			</Modal>
 		</div>
 	);
 };

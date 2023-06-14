@@ -14,11 +14,8 @@ export interface RestaurantDataType {
 
 export interface UserDataType {
 	id: string;
-	name: {
-		first: string;
-		last: string;
-	};
-	gender: string;
+	firstName: string;
+	lastName: string;
 	email: string;
 	role: string;
 }
