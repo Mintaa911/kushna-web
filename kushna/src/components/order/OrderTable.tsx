@@ -33,11 +33,31 @@ const columns: ColumnsType<DataType> = [
 	},
 	{
 		title: "Quantity",
-		dataIndex: "quantity",
+		dataIndex: "subOrders",
+		render: (subOrders: any) => {
+			const quantity = subOrders.map((subOrder: any) => {
+				return subOrder.orderedFoods
+					.map((orderedFood: any) => orderedFood.quantity)
+					.reduce((prev: number, next: number) => prev + next);
+			});
+
+			return quantity.reduce((prev: number, next: number) => prev + next);
+		},
 	},
 	{
 		title: "Price",
-		dataIndex: "totalPrice",
+		dataIndex: "subOrders",
+		render: (subOrders: any) => {
+			const price = subOrders.map((subOrder: any) => {
+				return subOrder.orderedFoods
+					.map(
+						(orderedFood: any) => orderedFood.quantity * orderedFood.food.price
+					)
+					.reduce((prev: number, next: number) => prev + next);
+			});
+
+			return price.reduce((prev: number, next: number) => prev + next);
+		},
 	},
 	{
 		title: "Delivery Type",

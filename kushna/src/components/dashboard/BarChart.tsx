@@ -41,10 +41,13 @@ function mapOrderToWeekdays(orders: any) {
 		const weekday = new Date(order.createdAt).toLocaleDateString("en-us", {
 			weekday: "short",
 		});
+		console.log(weekday);
 		weekdayMap.set(weekday, 1 + (weekdayMap.get(weekday) as number));
 	});
-	return Array.from(weekdayMap, ([key, val]) => ({
+	const res = Array.from(weekdayMap, ([key, val]) => ({
 		weekday: key,
 		count: val,
 	}));
+
+	return res;
 }

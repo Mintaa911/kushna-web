@@ -101,9 +101,19 @@ const NewOrderTable = () => {
 				onChange={handleTableChange}
 			>
 				<Column title='Food' dataIndex='name' key='name' />
+				<Column title='Order Id' dataIndex='orderId' key='orderId' />
 				<Column title='Price' dataIndex='price' key='price' />
 				<Column title='Quantity' dataIndex='quantity' key='quantity' />
 				<Column title='Status' dataIndex='status' key='status' />
+				<Column
+					title='Order Time'
+					dataIndex='createdAt'
+					key='createdAt'
+					render={(value: any) => {
+						const date = new Date(value).toDateString();
+						return <span>{date}</span>;
+					}}
+				/>
 				<Column
 					title='Action'
 					dataIndex='orderId'

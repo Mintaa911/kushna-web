@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Layout, Typography } from "antd";
+import { Button, Card, Form, Input, Layout, message, Typography } from "antd";
 import { LOGIN_USER } from "../graphql/mutation";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
@@ -7,9 +7,10 @@ import { AuthContext } from "../context/AuthContext";
 const { Content } = Layout;
 
 export default function Login() {
+	const [form] = Form.useForm();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
-	const [loginUser] = useMutation(LOGIN_USER);
+	const [loginUser, { error }] = useMutation(LOGIN_USER);
 	const { token, setToken, setUserId } = useContext(AuthContext);
 
 	useEffect(() => {
@@ -20,12 +21,19 @@ export default function Login() {
 
 	const onFinish = async (values: any) => {
 		setLoading(true);
-		const { data } = await loginUser({ variables: { input: values } });
-		if (data.login) {
-			setToken(data.login.token);
-			setUserId(data.login.id);
-			navigate("/");
+		try {
+			const { data } = await loginUser({ variables: { input: values } });
+			if (data.login) {
+				setToken(data.login.token);
+				setUserId(data.login.id);
+				navigate("/");
+			}
+		} catch (error: any) {
+			message.error(error.message);
 		}
+
+		form.resetFields();
+
 		setLoading(false);
 	};
 
@@ -59,6 +67,7 @@ export default function Login() {
 					Login
 				</Typography.Title>
 				<Form
+					form={form}
 					name='basic'
 					initialValues={{ remember: true }}
 					onFinish={onFinish}
