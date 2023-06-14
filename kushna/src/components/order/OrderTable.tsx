@@ -1,4 +1,4 @@
-import { Table, Modal } from "antd";
+import { Table, Modal, Skeleton } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
@@ -115,8 +115,9 @@ const OrderTable = () => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
+
 	return (
-		<>
+		<div data-testid='table'>
 			<Table
 				onRow={(record, rowIndex) => {
 					return {
@@ -140,7 +141,7 @@ const OrderTable = () => {
 			>
 				<p>detail</p>
 			</Modal>
-		</>
+		</div>
 	);
 };
 

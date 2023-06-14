@@ -74,7 +74,7 @@ const CustomerTable = () => {
 		setIsModalOpen(false);
 	};
 	return (
-		<>
+		<div data-testid='table'>
 			<Table
 				onRow={(record, rowIndex) => {
 					return {
@@ -98,7 +98,7 @@ const CustomerTable = () => {
 			>
 				<p>user detail</p>
 			</Modal>
-		</>
+		</div>
 	);
 };
 

@@ -87,7 +87,7 @@ export default function RestaurantTable() {
 	};
 
 	return (
-		<>
+		<div data-testid='table'>
 			<Table
 				onRow={(record, rowIndex) => {
 					return {
@@ -113,6 +113,6 @@ export default function RestaurantTable() {
 				<p>{singleRestaurant?.address}</p>
 				<p>{singleRestaurant?.description}</p>
 			</Modal>
-		</>
+		</div>
 	);
 }
