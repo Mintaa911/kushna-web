@@ -9,7 +9,8 @@ const { Content } = Layout;
 export default function Login() {
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
-	const [loginUser,{error}] = useMutation(LOGIN_USER);
+	const [loginUser] = useMutation(LOGIN_USER);
+	const [form] = Form.useForm();
 	const { token, setToken } = useContext(AuthContext);
 
 	useEffect(() => {
@@ -20,14 +21,17 @@ export default function Login() {
 
 	const onFinish = async (values: any) => {
 		setLoading(true);
-		const { data } = await loginUser({ variables: { input: values } });
-		if (data.login) {
-			setToken(data.login.token);
-			navigate("/");
+		try {
+			const { data } = await loginUser({ variables: { input: values } });
+			if (data.login) {
+				setToken(data.login.token);
+				navigate("/");
+			}
+		} catch (error: any) {
+			message.error(error.message);
+			form.resetFields();
 		}
-		if(error){
-			message.error(error.message)
-		}
+
 		setLoading(false);
 	};
 
@@ -61,6 +65,7 @@ export default function Login() {
 					Login
 				</Typography.Title>
 				<Form
+					form={form}
 					name='basic'
 					initialValues={{ remember: true }}
 					onFinish={onFinish}

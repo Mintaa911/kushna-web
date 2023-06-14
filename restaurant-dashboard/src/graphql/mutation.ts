@@ -163,3 +163,35 @@ export const UPDATE_SUBORDER_STATUS = gql`
 		}
 	}
 `;
+
+export const UPDATED_FOOD = gql`
+	mutation UpdateFood($input: UpdateFoodInput!, $foodId: Int!) {
+		updateFood(input: $input, foodId: $foodId) {
+			id
+			name
+			description
+			price
+			images
+			status
+			variables {
+				id
+				name
+				description
+				price
+			}
+			reviews {
+				id
+				rating
+				comment
+				reviewer {
+					id
+					firstName
+					lastName
+					email
+					role
+				}
+			}
+			createdAt
+		}
+	}
+`;

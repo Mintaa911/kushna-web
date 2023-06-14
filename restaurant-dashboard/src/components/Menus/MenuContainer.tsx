@@ -25,6 +25,7 @@ import { uploadRestaurantBanner } from "../../utils/image";
 import { AuthContext } from "../../context/AuthContext";
 import { PlusOutlined } from "@ant-design/icons";
 import ErrorPage from "../common/Error";
+import { useNavigate } from "react-router-dom";
 
 export default function MenuContainer() {
 	const { restaurantId } = useContext(AuthContext);
@@ -260,6 +261,7 @@ function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [form] = Form.useForm();
 	const [createFoodVariable] = useMutation(CREATE_FOOD_VARIABLE);
+	const navigate = useNavigate();
 
 	const handleCancel = () => {
 		setIsModalOpen(false);
@@ -285,6 +287,9 @@ function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 			if (data) {
 				message.success("Food Variable successfully created!");
 				form.resetFields();
+				setTimeout(() => {
+					navigate(0);
+				}, 500);
 			}
 		} catch (error: any) {
 			message.error(error.message);

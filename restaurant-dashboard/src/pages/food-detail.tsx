@@ -11,7 +11,6 @@ const FoodDetailPage = () => {
 					.reduce((prev: number, next: number) => prev + next)
 			: 0;
 
-	console.log(state.variables);
 	return (
 		<div>
 			<Card title='Food Detail' style={{}}>
@@ -26,7 +25,7 @@ const FoodDetailPage = () => {
 				<p>Price: ${state.price}</p>
 
 				<p>
-					Ingredients:{" "}
+					Variables:{" "}
 					{state.variables.length > 0
 						? state.variables.map((variable: any) => {
 								return <span key={variable.id}>{variable.name}</span>;
@@ -37,7 +36,11 @@ const FoodDetailPage = () => {
 				<div style={{ marginTop: 16 }}>
 					<h3>Average Rating</h3>
 					<Rate disabled allowHalf defaultValue={averageRating} />
-					<span style={{ marginLeft: 8 }}>{averageRating.toFixed(1)}</span>
+					<span style={{ marginLeft: 8 }}>
+						{averageRating.toFixed(1) > 0
+							? averageRating.toFixed(1) / state.reviews.length
+							: 0}
+					</span>
 				</div>
 				<div style={{ marginTop: 16 }}>
 					<h3>Reviews</h3>
@@ -45,9 +48,9 @@ const FoodDetailPage = () => {
 						? state.reviews.map((review: any) => {
 								return (
 									<div key={review.id}>
-										<p>
+										<h4>
 											{review.reviewer.firstName} {review.reviewer.lastName}
-										</p>
+										</h4>
 										<p>{review.comment}</p>
 										<Rate disabled defaultValue={review.rating} />
 									</div>

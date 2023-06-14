@@ -149,6 +149,8 @@ const User = () => {
 							onChange={(val) => {
 								if (val === "RestaurantManager") {
 									setIsManager(true);
+								}else{
+									setIsManager(false)
 								}
 							}}
 							options={[

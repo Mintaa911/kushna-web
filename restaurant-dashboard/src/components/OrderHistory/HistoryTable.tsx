@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_ORDER_HISTORY } from "../../graphql/query";
 import { AuthContext } from "../../context/AuthContext";
+import Column from "antd/es/table/Column";
 
 interface DataType {
 	orderId: number;
@@ -25,26 +26,6 @@ interface TableParams {
 	sortOrder?: string;
 	filters?: Record<string, FilterValue | null>;
 }
-
-const columns: ColumnsType<DataType> = [
-	{
-		title: "Food",
-		dataIndex: "name",
-		sorter: true,
-	},
-	{
-		title: "Price",
-		dataIndex: "price",
-	},
-	{
-		title: "Quantity",
-		dataIndex: "quantity",
-	},
-	{
-		title: "Status",
-		dataIndex: "status",
-	},
-];
 
 const OrderHistoryTable = () => {
 	const [orderHistory, setOrderHistory] = useState<DataType[]>();
@@ -94,20 +75,34 @@ const OrderHistoryTable = () => {
 	return (
 		<>
 			<Table
-				onRow={(record, rowIndex) => {
-					return {
-						onClick: (event) => {
-							showModal();
-						}, // click row
-					};
-				}}
-				columns={columns}
+				// onRow={(record, rowIndex) => {
+				// 	return {
+				// 		onClick: (event) => {
+				// 			showModal();
+				// 		}, // click row
+				// 	};
+				// }}
 				rowKey={(record) => record.orderId}
 				dataSource={orderHistory}
 				pagination={tableParams.pagination}
 				loading={loading}
 				onChange={handleTableChange}
-			/>
+			>
+				<Column title='Food' dataIndex='name' key='name' />
+				<Column title='Order Id' dataIndex='orderId' key='orderId' />
+				<Column title='Price' dataIndex='price' key='price' />
+				<Column title='Quantity' dataIndex='quantity' key='quantity' />
+				<Column title='Status' dataIndex='status' key='status' />
+				<Column
+					title='Order Time'
+					dataIndex='createdAt'
+					key='createdAt'
+					render={(value: any) => {
+						const date = new Date(value).toDateString();
+						return <span>{date}</span>;
+					}}
+				/>
+			</Table>
 			<Modal
 				title='Order Detail'
 				open={isModalOpen}
