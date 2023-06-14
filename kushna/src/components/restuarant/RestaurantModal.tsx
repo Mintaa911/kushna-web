@@ -46,7 +46,6 @@ export default function CreateRestaurantModal({
 				message.error(`There was a problem while uploading images.`);
 				return;
 			}
-
 			const { data } = await createRestaurant({
 				variables: {
 					input: {
@@ -54,6 +53,7 @@ export default function CreateRestaurantModal({
 						openingHour: values.openingHour.toISOString(),
 						closingHour: values.closingHour.toISOString(),
 						banner: bannerURLs,
+						address: `${values.address}:${values.longitude},${values.latitude}`,
 					},
 				},
 			});
@@ -62,7 +62,6 @@ export default function CreateRestaurantModal({
 				message.success(
 					"Uploaded image to storage and created a restaurant record on DB"
 				);
-				form.resetFields();
 			}
 
 			// clear file list
@@ -71,6 +70,7 @@ export default function CreateRestaurantModal({
 			message.error(error.message);
 		} finally {
 			setIsLoading(false);
+			form.resetFields();
 		}
 	};
 
@@ -92,6 +92,7 @@ export default function CreateRestaurantModal({
 			open={isModalOpen}
 			onCancel={handleCancel}
 			footer={null}
+			style={{ width: 800 }}
 		>
 			<BannerUpload setFileList={setFileList} />
 
@@ -134,6 +135,34 @@ export default function CreateRestaurantModal({
 				>
 					<Input placeholder='address' />
 				</Form.Item>
+				<div style={{ display: "flex", justifyContent: "space-between" }}>
+					<Form.Item
+						label='Longitude'
+						name='longitude'
+						rules={[
+							{
+								required: true,
+								message: "Please input restaurant longitude address!",
+							},
+						]}
+						style={{ marginBottom: 10 }}
+					>
+						<Input placeholder='longitude' />
+					</Form.Item>
+					<Form.Item
+						label='Latitude'
+						name='latitude'
+						rules={[
+							{
+								required: true,
+								message: "Please input restaurant latitude address!",
+							},
+						]}
+						style={{ marginBottom: 10 }}
+					>
+						<Input placeholder='latitude' />
+					</Form.Item>
+				</div>
 
 				<div style={{ display: "flex", justifyContent: "space-between" }}>
 					<Form.Item

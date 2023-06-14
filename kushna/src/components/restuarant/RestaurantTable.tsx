@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Modal } from "antd";
+import { Table } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import { RestaurantDataType } from "../../types";
@@ -15,15 +15,16 @@ interface TableParams {
 
 const columns: ColumnsType<RestaurantDataType> = [
 	{
+		title: "Id",
+		dataIndex: "id",
+	},
+	{
 		title: "Name",
 		dataIndex: "name",
-		sorter: true,
-		// width: "30%",
 	},
 	{
 		title: "Address",
 		dataIndex: "address",
-		// width: "20%",
 	},
 	{
 		title: "Phone",
@@ -41,9 +42,6 @@ const columns: ColumnsType<RestaurantDataType> = [
 
 export default function RestaurantTable() {
 	const [myData, setData] = useState<RestaurantDataType[]>();
-	const [singleRestaurant, setSingleRestaurant] =
-		useState<RestaurantDataType>();
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [tableParams, setTableParams] = useState<TableParams>({
 		pagination: {
 			current: 1,
@@ -77,25 +75,9 @@ export default function RestaurantTable() {
 		}
 	};
 
-	const showModal = (item: RestaurantDataType) => {
-		setSingleRestaurant(item);
-		setIsModalOpen(true);
-	};
-
-	const handleCancel = () => {
-		setIsModalOpen(false);
-	};
-
 	return (
 		<div data-testid='table'>
 			<Table
-				onRow={(record, rowIndex) => {
-					return {
-						onClick: (event) => {
-							showModal(record);
-						}, // click row
-					};
-				}}
 				columns={columns}
 				rowKey={(record) => record.id}
 				dataSource={myData}
@@ -103,16 +85,6 @@ export default function RestaurantTable() {
 				loading={loading}
 				onChange={handleTableChange}
 			/>
-			<Modal
-				title='Restaurant Detail'
-				open={isModalOpen}
-				onCancel={handleCancel}
-				footer={null}
-			>
-				<p>{singleRestaurant?.name}</p>
-				<p>{singleRestaurant?.address}</p>
-				<p>{singleRestaurant?.description}</p>
-			</Modal>
 		</div>
 	);
 }

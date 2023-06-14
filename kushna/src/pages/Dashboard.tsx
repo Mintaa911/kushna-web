@@ -2,14 +2,13 @@ import { Row, Col, Card, Skeleton } from "antd";
 import { BarChartOutlined } from "@ant-design/icons";
 import BasicCard from "../components/common/BasicCard";
 import useBreakpoint from "../hooks/UseBreakpoint";
-import { ChartData1 } from "../data/SampleData";
 import OrderBarChart from "../components/dashboard/BarChart";
-import OrderPieChart from "../components/dashboard/PieChart";
-import LineChart from "../components/dashboard/LineChart";
+import TopRatedChart from "../components/dashboard/TopRatedChart";
 import { useQuery } from "@apollo/client";
 import { GET_ORDERS, GET_RESTAURANTS, GET_USERS } from "../graphql/query";
 import { useEffect, useState } from "react";
 import ErrorPage from "../components/common/Error";
+import CouponTable from "../components/dashboard/CouponTable";
 
 const Dashboard = () => {
 	const [orderCount, setOrderCount] = useState(0);
@@ -97,13 +96,13 @@ const Dashboard = () => {
 			</Row>
 			<Row gutter={20} style={{ marginTop: 20 }}>
 				<Col span={12}>
-					<Card style={{ paddingLeft: 20 }} bodyStyle={{ padding: "0" }}>
-						<h1>Booked Order From Head Quarter</h1>
-						<OrderPieChart data={orders.getAllOrders} />
+					<Card style={{ paddingLeft: 0 }} bodyStyle={{ padding: 0 }}>
+						<h1 style={{ paddingLeft: 20 }}>Top Rated Foods</h1>
+						<TopRatedChart />
 					</Card>
 				</Col>
 				<Col span={12}>
-					<Card style={{ paddingLeft: 5 }} bodyStyle={{ padding: "0" }}>
+					<Card style={{ paddingLeft: 0 }} bodyStyle={{ padding: "0" }}>
 						<h1 style={{ marginLeft: 15 }}>Order Distribution by day</h1>
 						<OrderBarChart data={orders.getAllOrders} />
 					</Card>
@@ -116,8 +115,8 @@ const Dashboard = () => {
 					paddingLeft: 20,
 				}}
 			>
-				<h1>Order Distribution Over the Week</h1>
-				<LineChart data={ChartData1} />
+				<h1>Coupons</h1>
+				<CouponTable />
 			</Card>
 		</div>
 	);
