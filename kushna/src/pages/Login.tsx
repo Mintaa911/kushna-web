@@ -24,6 +24,7 @@ export default function Login() {
 		try {
 			const { data } = await loginUser({ variables: { input: values } });
 			if (data.login) {
+				console.log(data);
 				setToken(data.login.token);
 				navigate("/");
 			}
@@ -83,7 +84,7 @@ export default function Login() {
 							},
 						]}
 					>
-						<Input type={"email"} placeholder='example@gmail.com' />
+						<Input type={"email"} placeholder='email' />
 					</Form.Item>
 					<Form.Item
 						name='password'
