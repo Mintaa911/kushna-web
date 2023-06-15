@@ -331,7 +331,7 @@ function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 					rules={[{ required: true, message: "Please input restaurant name!" }]}
 					style={{ marginBottom: 10 }}
 				>
-					<Input placeholder='restaurant name' />
+					<Input placeholder='variable name' />
 				</Form.Item>
 				<Form.Item
 					label='Description'
@@ -339,7 +339,7 @@ function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 					rules={[
 						{
 							required: true,
-							message: "Please input restaurant description",
+							message: "Please input variable description",
 						},
 					]}
 					style={{ marginBottom: 10 }}
@@ -349,7 +349,7 @@ function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 				<Form.Item
 					label='Price'
 					name='price'
-					rules={[{ required: true, message: "Please input food price!" }]}
+					rules={[{ required: true, message: "Please input variable price!" }]}
 					style={{ marginBottom: 10 }}
 				>
 					<Input type='number' placeholder='price' />
@@ -357,7 +357,7 @@ function CreateVariableModal({ isModalOpen, setIsModalOpen, foods }: IProps) {
 				<Form.Item
 					label='Food'
 					name='foodId'
-					rules={[{ required: true, message: "Please input user type!" }]}
+					rules={[{ required: true, message: "Please select food!" }]}
 					style={{ marginBottom: 20 }}
 				>
 					<Select options={foods} />

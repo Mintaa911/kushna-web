@@ -53,7 +53,6 @@ export default function CreateRestaurantModal({
 						openingHour: values.openingHour.toISOString(),
 						closingHour: values.closingHour.toISOString(),
 						banner: bannerURLs,
-						address: `${values.address}:${values.longitude},${values.latitude}`,
 					},
 				},
 			});
@@ -135,35 +134,6 @@ export default function CreateRestaurantModal({
 				>
 					<Input placeholder='address' />
 				</Form.Item>
-				<div style={{ display: "flex", justifyContent: "space-between" }}>
-					<Form.Item
-						label='Longitude'
-						name='longitude'
-						rules={[
-							{
-								required: true,
-								message: "Please input restaurant longitude address!",
-							},
-						]}
-						style={{ marginBottom: 10 }}
-					>
-						<Input placeholder='longitude' />
-					</Form.Item>
-					<Form.Item
-						label='Latitude'
-						name='latitude'
-						rules={[
-							{
-								required: true,
-								message: "Please input restaurant latitude address!",
-							},
-						]}
-						style={{ marginBottom: 10 }}
-					>
-						<Input placeholder='latitude' />
-					</Form.Item>
-				</div>
-
 				<div style={{ display: "flex", justifyContent: "space-between" }}>
 					<Form.Item
 						label='Email'

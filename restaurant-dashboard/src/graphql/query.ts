@@ -133,6 +133,34 @@ export const GET_MANAGER = gql`
 			user {
 				firstName
 				lastName
+				email
+			}
+		}
+	}
+`;
+
+export const GET_RESTAURANT_WITH_DETAIL = gql`
+	query Restaurant($restaurantId: Int!) {
+		restaurant(id: $restaurantId) {
+			id
+			name
+			address
+			phone
+			email
+			description
+			openingHour
+			closingHour
+			restaurantType
+			status
+			banner
+			cupons {
+				numberOfTimesUsed
+				isActive
+				code
+				discount
+			}
+			foods {
+				id
 			}
 		}
 	}

@@ -8,13 +8,14 @@ import OrderHistory from "./pages/OrderHistory";
 import RequireAuth from "./components/common/RequireAuth";
 import Login from "./pages/Login";
 import FoodDetailPage from "./pages/food-detail";
+import Profile from "./pages/profile";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: (
 			<RequireAuth>
-				<MainLayout children={<Dashboard />} label='Dashboard' />
+				<MainLayout children={<Dashboard />} />
 			</RequireAuth>
 		),
 	},
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
 		path: "/new-order",
 		element: (
 			<RequireAuth>
-				<MainLayout children={<NewOrder />} label='Dashboard' />
+				<MainLayout children={<NewOrder />} />
 			</RequireAuth>
 		),
 	},
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
 		path: "/order-history",
 		element: (
 			<RequireAuth>
-				<MainLayout children={<OrderHistory />} label='Dashboard' />
+				<MainLayout children={<OrderHistory />} />
 			</RequireAuth>
 		),
 	},
@@ -38,7 +39,15 @@ const router = createBrowserRouter([
 		path: "/food-detail",
 		element: (
 			<RequireAuth>
-				<MainLayout children={<FoodDetailPage />} label='Dashboard' />
+				<MainLayout children={<FoodDetailPage />} />
+			</RequireAuth>
+		),
+	},
+	{
+		path: "/profile",
+		element: (
+			<RequireAuth>
+				<MainLayout children={<Profile />} />
 			</RequireAuth>
 		),
 	},
