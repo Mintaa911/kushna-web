@@ -19,3 +19,24 @@ type Review = {
 	rating: number;
 	comment: string;
 };
+
+type Manager = {
+	id: number;
+	firstName: string;
+	lastName: string;
+	email: string;
+};
+
+type Restaurant = {
+	id: number;
+	closingHour: string;
+	coupons: Object;
+	description: Object;
+	email: string;
+	name: string;
+	openingHour: string;
+	phone: string;
+	restaurantType: string;
+	status: string;
+	banner: Array<string>;
+};

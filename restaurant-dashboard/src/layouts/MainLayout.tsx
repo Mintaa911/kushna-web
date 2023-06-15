@@ -12,7 +12,7 @@ import { GET_MANAGER } from "../graphql/query";
 import { AuthContext } from "../context/AuthContext";
 import ErrorPage from "../components/common/Error";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -142,6 +142,9 @@ const MainLayout = ({ children, label }: LayoutProps) => {
 						<Avatar
 							style={{ verticalAlign: "middle" }}
 							size={{ xs: 12, sm: 16, md: 20, lg: 32, xl: 40, xxl: 50 }}
+							onClick={() => {
+								navigate("/profile");
+							}}
 						>
 							{data.manager.user.firstName[0]}
 						</Avatar>

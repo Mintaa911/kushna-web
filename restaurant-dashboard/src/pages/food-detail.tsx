@@ -21,7 +21,6 @@ const FoodDetailPage = () => {
 				/>
 
 				<p>Name: {state.name}</p>
-				{/* <p>Type: Italian</p> */}
 				<p>Price: ${state.price}</p>
 
 				<p>
