@@ -64,12 +64,12 @@ export default function CreateRestaurantModal({
 			}
 
 			// clear file list
-			// setFileList([]);
+			setFileList([]);
+			form.resetFields();
 		} catch (error: any) {
 			message.error(error.message);
 		} finally {
 			setIsLoading(false);
-			form.resetFields();
 		}
 	};
 

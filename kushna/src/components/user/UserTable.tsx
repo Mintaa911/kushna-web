@@ -45,7 +45,9 @@ const CustomerTable = () => {
 		},
 	});
 
-	const { loading, data: dataQuery } = useQuery(GET_USERS);
+	const { loading, data: dataQuery } = useQuery(GET_USERS, {
+		pollInterval: 5000,
+	});
 	useEffect(() => {
 		if (dataQuery) {
 			setData(dataQuery.users);

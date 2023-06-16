@@ -24,7 +24,6 @@ export default function Login() {
 		try {
 			const { data } = await loginUser({ variables: { input: values } });
 			if (data.login) {
-				console.log(data);
 				setToken(data.login.token);
 				navigate("/");
 			}

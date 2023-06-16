@@ -31,6 +31,7 @@ export default function MenuContainer() {
 	const { restaurantId } = useContext(AuthContext);
 	const { loading, data, error } = useQuery(GET_Foods_From_Restaurant, {
 		variables: { restaurantId: restaurantId },
+		pollInterval: 3000,
 	});
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [variableModalOpen, setVariableModalOpen] = useState(false);

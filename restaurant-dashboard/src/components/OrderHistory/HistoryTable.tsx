@@ -38,7 +38,9 @@ const OrderHistoryTable = () => {
 		},
 	});
 	const { restaurantId } = useContext(AuthContext);
-	const { loading, data: dataQuery } = useQuery(GET_ORDER_HISTORY);
+	const { loading, data: dataQuery } = useQuery(GET_ORDER_HISTORY, {
+		pollInterval: 5000,
+	});
 
 	useEffect(() => {
 		if (dataQuery) {
@@ -123,7 +125,10 @@ const mapOrderByRestaurant = (orders: any, restaurantId: number) => {
 				return orderedFood.food.restaurant.id === restaurantId;
 			});
 			console.log(subOrder.orderStatus);
-			return subOrder.orderStatus === "PREPARED" && result.length !== 0
+			return (subOrder.orderStatus !== "PREPARING" ||
+				subOrder.orderStatus !== "IN_PROGRESS" ||
+				subOrder.orderStatus !== "CANCELED") &&
+				result.length !== 0
 				? { ...subOrder, orderedFoods: result }
 				: [];
 		});

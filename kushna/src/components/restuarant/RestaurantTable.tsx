@@ -49,7 +49,9 @@ export default function RestaurantTable() {
 			showSizeChanger: false,
 		},
 	});
-	const { loading, data } = useQuery(GET_RESTAURANTS);
+	const { loading, data } = useQuery(GET_RESTAURANTS, {
+		pollInterval: 5000,
+	});
 	useEffect(() => {
 		if (data) {
 			setData(data.restaurants);

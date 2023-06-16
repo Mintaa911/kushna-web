@@ -98,7 +98,7 @@ const MenuItem = (item: Foods) => {
 							<StarOutlined />
 							&nbsp; &nbsp;
 							{averageRating.toFixed(1) > 0
-								? averageRating.toFixed(1) / item.reviews.length
+								? (averageRating.toFixed(1) / item.reviews.length).toFixed(1)
 								: 0}
 						</div>
 					</Col>

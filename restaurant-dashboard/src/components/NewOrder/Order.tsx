@@ -42,7 +42,9 @@ const NewOrderTable = () => {
 	});
 
 	const { restaurantId } = useContext(AuthContext);
-	const { loading, data: dataQuery } = useQuery(GET_ORDER_HISTORY);
+	const { loading, data: dataQuery } = useQuery(GET_ORDER_HISTORY, {
+		pollInterval: 5000,
+	});
 	const [updateSuborderStatus] = useMutation(UPDATE_SUBORDER_STATUS);
 
 	useEffect(() => {

@@ -21,17 +21,23 @@ const Dashboard = () => {
 		data: restaurants,
 		loading: loadingRestaurant,
 		error: restaurantError,
-	} = useQuery(GET_RESTAURANTS);
+	} = useQuery(GET_RESTAURANTS, {
+		pollInterval: 5000,
+	});
 	const {
 		data: orders,
 		loading: loadingOrder,
 		error: orderError,
-	} = useQuery(GET_ORDERS);
+	} = useQuery(GET_ORDERS, {
+		pollInterval: 5000,
+	});
 	const {
 		data: users,
 		loading: loadingUser,
 		error: userError,
-	} = useQuery(GET_USERS);
+	} = useQuery(GET_USERS, {
+		pollInterval: 5000,
+	});
 
 	useEffect(() => {
 		if (restaurants) {

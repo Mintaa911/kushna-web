@@ -83,7 +83,9 @@ const OrderTable = () => {
 		},
 	});
 
-	const { loading, data: dataQuery } = useQuery(GET_ORDERS);
+	const { loading, data: dataQuery } = useQuery(GET_ORDERS, {
+		pollInterval: 5000,
+	});
 	useEffect(() => {
 		if (dataQuery) {
 			setData(dataQuery.getAllOrders);
